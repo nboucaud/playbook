@@ -1,4 +1,3 @@
-import { DownloadTips } from '@affine/component/affine-banner';
 import { useTranslation } from '@affine/i18n';
 import { WorkspaceFlavour } from '@affine/workspace/type';
 import { CloseIcon } from '@blocksuite/icons';
@@ -13,12 +12,12 @@ import {
   useState,
 } from 'react';
 
-import { useGuideHidden } from '../../../hooks/use-is-first-load';
 import {
   useSidebarFloating,
   useSidebarStatus,
 } from '../../../hooks/use-sidebar-status';
 import type { AffineOfficialWorkspace } from '../../../shared';
+import { DownloadClientTip } from './download-tips';
 import { EditorOptionMenu } from './header-right-items/EditorOptionMenu';
 import EditPage from './header-right-items/EditPage';
 import { HeaderShareMenu } from './header-right-items/ShareMenu';
@@ -140,8 +139,9 @@ export const Header = forwardRef<
   HTMLDivElement,
   PropsWithChildren<HeaderProps> & HTMLAttributes<HTMLDivElement>
 >((props, ref) => {
-  const [isTipsHidden, setTipsHidden] = useGuideHidden();
   const [showWarning, setShowWarning] = useState(false);
+  const [showGuideDownloadClientTip, setShowGuideDownloadClientTip] =
+    useState(true);
   useEffect(() => {
     setShowWarning(shouldShowWarning());
   }, []);
@@ -156,10 +156,11 @@ export const Header = forwardRef<
       hasWarning={showWarning}
       {...props}
     >
-      {!isTipsHidden.downloadTip ? (
-        <DownloadTips
+      {showGuideDownloadClientTip ? (
+        <DownloadClientTip
+          show={showGuideDownloadClientTip}
           onClose={() => {
-            setTipsHidden({ ...isTipsHidden, downloadTip: true });
+            setShowGuideDownloadClientTip(false);
           }}
         />
       ) : (
