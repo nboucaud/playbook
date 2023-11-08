@@ -45,5 +45,5 @@ const useFilterTag = ({ name }: FilterTagProps) => {
 export const FilterTag = ({ name }: FilterTagProps) => {
   const tag = useFilterTag({ name });
 
-  return <span data-testid={`filler-tag-${tag}`}>{tag}</span>;
+  return <span data-testid={`filter-tag-${tag}`}>{tag}</span>;
 };

@@ -104,7 +104,7 @@ test('allow creation of filters by created time', async ({ page }) => {
   expect(await getPagesCount(page)).toBe(0);
   // change filter
   await page.getByTestId('filter-name').click();
-  await page.getByTestId('filler-tag-before').click();
+  await page.getByTestId('filter-tag-before').click();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   await fillDatePicker(page, tomorrow);
@@ -135,7 +135,7 @@ test('creation of filters by created time, then click date picker to modify the 
   expect(await getPagesCount(page)).toBe(0);
   // change filter
   await page.locator('[data-testid="filter-name"]').click();
-  await page.getByTestId('filler-tag-before').click();
+  await page.getByTestId('filter-tag-before').click();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   await selectDateFromDatePicker(page, tomorrow);

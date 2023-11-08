@@ -207,7 +207,7 @@ export const createPageWithTag = async (
 
 export const changeFilter = async (page: Page, to: string) => {
   await page.getByTestId('filter-name').click();
-  await page.getByTestId(`filler-tag-${to}`).click();
+  await page.getByTestId(`filter-tag-${to}`).click();
 };
 
 export async function selectTag(page: Page, name: string | RegExp) {

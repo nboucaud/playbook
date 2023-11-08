@@ -186,7 +186,11 @@ const Placeholder = ({ collection }: { collection: Collection }) => {
               justifyContent: 'center',
             }}
           >
-            <div onClick={openPageEdit} className={styles.placeholderButton}>
+            <div
+              data-testid="add-pages-button"
+              onClick={openPageEdit}
+              className={styles.placeholderButton}
+            >
               <PageIcon
                 style={{
                   width: 20,

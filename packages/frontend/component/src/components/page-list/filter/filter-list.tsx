@@ -31,7 +31,11 @@ export const FilterList = ({
     >
       {value.map((filter, i) => {
         return (
-          <div className={styles.filterItemStyle} key={i}>
+          <div
+            className={styles.filterItemStyle}
+            data-testid="condition-item"
+            key={i}
+          >
             <Condition
               propertiesMeta={propertiesMeta}
               value={filter}

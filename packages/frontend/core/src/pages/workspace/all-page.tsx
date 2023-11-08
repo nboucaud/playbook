@@ -76,7 +76,10 @@ const PageListHeader = () => {
         <div className={styles.titleIcon}>
           <ViewLayersIcon />
         </div>
-        <div className={styles.titleCollectionName}>
+        <div
+          data-testid="collection-page-name"
+          className={styles.titleCollectionName}
+        >
           {setting.currentCollection.name}
         </div>
       </>
