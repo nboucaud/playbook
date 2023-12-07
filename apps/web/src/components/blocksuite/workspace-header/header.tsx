@@ -163,14 +163,7 @@ export const Header = forwardRef<
             setShowGuideDownloadClientTip(false);
           }}
         />
-      ) : (
-        <BrowserWarning
-          show={showWarning}
-          onClose={() => {
-            setShowWarning(false);
-          }}
-        />
-      )}
+      ) : null}
       <StyledHeader
         hasWarning={showWarning}
         data-testid="editor-header-items"

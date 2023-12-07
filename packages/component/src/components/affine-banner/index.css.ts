@@ -37,8 +37,8 @@ export const closeIconStyle = style({
   zIndex: 1,
 });
 export const downloadTipContainerStyle = style({
-  backgroundColor: 'var(--affine-primary-color)',
-  color: 'var(--affine-white)',
+  backgroundColor: 'rgba(253, 236, 235, 1)',
+  color: 'rgb(235, 67, 53)',
   width: '100%',
   height: '44px',
   fontSize: 'var(--affine-font-base)',
@@ -54,7 +54,7 @@ export const downloadTipStyle = style({
   alignItems: 'center',
 });
 export const downloadTipIconStyle = style({
-  color: 'var(--affine-white)',
+  color: 'rgb(235, 67, 53)',
   width: '24px',
   height: '24px',
   fontSize: '24px',
@@ -62,7 +62,7 @@ export const downloadTipIconStyle = style({
   zIndex: 1,
 });
 export const downloadCloseButtonStyle = style({
-  color: 'var(--affine-white)',
+  color: 'rgb(235, 67, 53)',
   cursor: 'pointer',
   display: 'flex',
   justifyContent: 'center',
@@ -71,17 +71,18 @@ export const downloadCloseButtonStyle = style({
   right: '24px',
 });
 export const downloadMessageStyle = style({
-  color: 'var(--affine-white)',
+  color: 'rgb(235, 67, 53)',
   marginLeft: '8px',
 });
 export const linkStyle = style({
-  color: 'var(--affine-white)',
+  color: 'rgb(235, 67, 53)',
+  marginLeft: '4px',
   textDecoration: 'underline',
   ':hover': {
     textDecoration: 'underline',
   },
   ':visited': {
-    color: 'var(--affine-white)',
+    color: 'rgb(235, 67, 53)',
     textDecoration: 'underline',
   },
 });
