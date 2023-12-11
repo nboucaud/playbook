@@ -1,5 +1,5 @@
 import anime from 'animejs';
-import { type CSSProperties, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { Paper, type PaperProps } from '../curve-paper/paper';
 import * as paperStyles from '../curve-paper/paper.css';
@@ -24,7 +24,7 @@ export const AnimateIn = ({
   paperProps,
   onFinished,
 }: AnimateInProps) => {
-  const { id: _id, location, enterOptions, brief } = article;
+  const { id: _id, enterOptions, brief } = article;
   const id = `onboardingMoveIn${_id}`;
   const segments = 4;
 
@@ -51,24 +51,6 @@ export const AnimateIn = ({
       .catch(console.error);
   }, [enterOptions.delay, id, rotateX, onFinished]);
 
-  const variables = {
-    '--fromX': `${enterOptions.fromX}vw`,
-    '--fromY': `${enterOptions.fromY}vh`,
-    '--fromZ': `${enterOptions.fromZ}px`,
-    '--toZ': `${enterOptions.toZ}px`,
-    '--fromRotateX': `${enterOptions.fromRotateX}deg`,
-    '--fromRotateY': `${enterOptions.fromRotateY}deg`,
-    '--fromRotateZ': `${enterOptions.fromRotateZ}deg`,
-    '--toRotateZ': `${enterOptions.toRotateZ}deg`,
-
-    '--delay': `${enterOptions.delay}ms`,
-    '--duration': enterOptions.duration,
-    '--easing': enterOptions.easing,
-
-    '--offset-x': `${location.x || 0}px`,
-    '--offset-y': `${location.y || 0}px`,
-  } as CSSProperties;
-
   const props = {
     ...paperProps,
     segments,
@@ -77,7 +59,7 @@ export const AnimateIn = ({
   };
 
   return (
-    <div data-id={id} className={styles.moveIn} style={variables}>
+    <div data-id={id} className={styles.moveIn}>
       <Paper {...props} />
     </div>
   );
