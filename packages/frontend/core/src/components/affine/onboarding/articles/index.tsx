@@ -1,5 +1,11 @@
 import { article, articleWrapper, text, title } from '../curve-paper/paper.css';
 import type { ArticleId, ArticleOption } from '../types';
+// TODO: lazy load
+import { article0 } from './article-0';
+import { article1 } from './article-1';
+import { article2 } from './article-2';
+import { article3 } from './article-3';
+import { article4 } from './article-4';
 
 const ids = ['0', '1', '2', '3', '4'] as Array<ArticleId>;
 
@@ -127,6 +133,21 @@ const paperBriefs = {
   '0': (
     <div className={articleWrapper}>
       <article className={article}>
+        <h1 className={title}>HOWTO: Be more productive</h1>
+        <p className={text}>
+          “With all the time you spend watching TV,” he tells me, “you could
+          have written a novel by now.” It’s hard to disagree with the sentiment
+          — writing a novel is undoubtedly a better use of time than watching TV
+          — but what about the hidden assumption? Such comments imply that time
+          is “fungible” — that time spent watching TV can just as easily be
+          spent writing a novel. And sadly, that’s just not the case.
+        </p>
+      </article>
+    </div>
+  ),
+  '4': (
+    <div className={articleWrapper}>
+      <article className={article}>
         <h1 className={title}>Breath of the Wild: Redefining Game Design</h1>
         <p className={text}>
           “With all the time you spend watching TV,” he tells me, “you could
@@ -195,21 +216,14 @@ const paperBriefs = {
       </article>
     </div>
   ),
-  '4': (
-    <div className={articleWrapper}>
-      <article className={article}>
-        <h1 className={title}>HOWTO: Be more productive</h1>
-        <p className={text}>
-          “With all the time you spend watching TV,” he tells me, “you could
-          have written a novel by now.” It’s hard to disagree with the sentiment
-          — writing a novel is undoubtedly a better use of time than watching TV
-          — but what about the hidden assumption? Such comments imply that time
-          is “fungible” — that time spent watching TV can just as easily be
-          spent writing a novel. And sadly, that’s just not the case.
-        </p>
-      </article>
-    </div>
-  ),
+};
+
+const contents = {
+  '0': article0,
+  '1': article1,
+  '2': article2,
+  '3': article3,
+  '4': article4,
 };
 
 export const articles: Record<ArticleId, ArticleOption> = ids.reduce(
@@ -221,6 +235,7 @@ export const articles: Record<ArticleId, ArticleOption> = ids.reduce(
         location: paperLocations[id],
         enterOptions: paperEnterAnimations[id],
         brief: paperBriefs[id],
+        blocks: contents[id],
       } satisfies ArticleOption,
     };
   },

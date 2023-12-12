@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { AnimateIn } from './steps/animate-in';
+import { EdgelessSwitch } from './steps/edgeless-switch';
 import { Unfolding } from './steps/unfolding';
 import type { ArticleId, OnboardingStep } from './types';
 import { type ArticleOption } from './types';
@@ -34,6 +35,7 @@ export const PaperSteps = ({
   const _onFoldChanged = useCallback(
     (v: boolean) => {
       onFoldChanged?.(article.id, v);
+      if (!v) setStage('edgeless-switch');
     },
     [onFoldChanged, article.id]
   );
@@ -47,5 +49,7 @@ export const PaperSteps = ({
       onChange={_onFoldChange}
       onChanged={_onFoldChanged}
     />
-  ) : null;
+  ) : (
+    <EdgelessSwitch article={article} />
+  );
 };

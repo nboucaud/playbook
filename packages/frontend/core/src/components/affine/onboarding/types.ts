@@ -1,7 +1,8 @@
-import type { ReactNode } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
 
-export type OnboardingStep = 'enter' | 'unfold' | 'mode-switch';
+export type OnboardingStep = 'enter' | 'unfold' | 'edgeless-switch';
 export type ArticleId = '0' | '1' | '2' | '3' | '4';
+export type EdgelessSwitchMode = 'edgeless' | 'page';
 
 /**
  * Paper enter animation options
@@ -44,4 +45,28 @@ export interface ArticleOption {
     /** offset Y */
     y: number;
   };
+
+  /** content that contains edgeless info */
+  blocks: OnboardingBlockOption[];
+}
+
+export interface OnboardingBlockOption extends PropsWithChildren {
+  /**
+   * if set, will apply special background styled for edgeless mode
+   */
+  bg?: string;
+  /**
+   * only show in edgeless mode
+   */
+  edgelessOnly?: boolean;
+  /** apply transform */
+  offset?: { x?: number; y?: number };
+  /** apply absolute position for edgeless mode */
+  position?: { x?: number; y?: number };
+  /** apply absolute position for page mode */
+  fromPosition?: { x?: number; y?: number };
+  /** enter delay in ms */
+  enterDelay?: number;
+  /** leave delay in ms */
+  leaveDelay?: number;
 }
