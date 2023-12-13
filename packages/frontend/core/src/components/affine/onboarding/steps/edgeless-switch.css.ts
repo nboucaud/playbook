@@ -98,3 +98,9 @@ export const page = style({
   paddingTop: '150px',
   paddingBottom: '150px',
 });
+
+export const backButton = style({
+  position: 'absolute',
+  top: '20px',
+  left: '20px',
+});

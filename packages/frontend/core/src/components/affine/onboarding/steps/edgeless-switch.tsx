@@ -1,3 +1,5 @@
+import { IconButton } from '@affine/component';
+import { ArrowLeftSmallIcon } from '@blocksuite/icons';
 import { debounce } from 'lodash-es';
 import {
   type CSSProperties,
@@ -15,6 +17,7 @@ import * as styles from './edgeless-switch.css';
 
 interface EdgelessSwitchProps {
   article: ArticleOption;
+  onBack?: () => void;
 }
 
 const offsetXRanges = [-2000, 2000];
@@ -33,7 +36,7 @@ const defaultState: State = {
   offsetY: 0,
 };
 
-export const EdgelessSwitch = ({ article }: EdgelessSwitchProps) => {
+export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
   const windowRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const mouseDownRef = useRef(false);
@@ -181,6 +184,10 @@ export const EdgelessSwitch = ({ article }: EdgelessSwitchProps) => {
       <div className={styles.toolbar}>
         <ToolbarSVG />
       </div>
+
+      <IconButton className={styles.backButton} onClick={onBack}>
+        <ArrowLeftSmallIcon />
+      </IconButton>
     </div>
   );
 };

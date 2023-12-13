@@ -19,7 +19,7 @@ export const Onboarding = (_: OnboardingProps) => {
     setStatus(s => {
       return {
         activeId: v ? null : s.activeId,
-        unfoldingId: v ? null : id,
+        unfoldingId: v ? s.unfoldingId : id,
       };
     });
   }, []);
@@ -28,7 +28,7 @@ export const Onboarding = (_: OnboardingProps) => {
     setStatus(s => {
       return {
         activeId: v ? null : id,
-        unfoldingId: s.unfoldingId,
+        unfoldingId: v ? null : s.unfoldingId,
       };
     });
   }, []);

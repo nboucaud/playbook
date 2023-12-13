@@ -20,6 +20,7 @@ export const PaperSteps = ({
   onFoldChanged,
 }: PaperStepsProps) => {
   const [stage, setStage] = useState<OnboardingStep>('enter');
+  const [fold, setFold] = useState(true);
 
   const onEntered = useCallback(() => {
     setStage('unfold');
@@ -27,6 +28,7 @@ export const PaperSteps = ({
 
   const _onFoldChange = useCallback(
     (v: boolean) => {
+      setFold(v);
       onFoldChange?.(article.id, v);
     },
     [onFoldChange, article.id]
@@ -40,16 +42,24 @@ export const PaperSteps = ({
     [onFoldChanged, article.id]
   );
 
+  const onEdgelessSwitchBack = useCallback(() => {
+    setFold(false);
+    setStage('unfold');
+    // to apply fold animation
+    setTimeout(() => _onFoldChange(true));
+  }, [_onFoldChange]);
+
   if (!show) return null;
   return stage === 'enter' ? (
     <AnimateIn article={article} onFinished={onEntered} />
   ) : stage === 'unfold' ? (
     <Unfolding
+      fold={fold}
       article={article}
       onChange={_onFoldChange}
       onChanged={_onFoldChanged}
     />
   ) : (
-    <EdgelessSwitch article={article} />
+    <EdgelessSwitch article={article} onBack={onEdgelessSwitchBack} />
   );
 };
