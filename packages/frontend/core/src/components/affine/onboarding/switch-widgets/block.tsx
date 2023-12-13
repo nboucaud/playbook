@@ -5,7 +5,6 @@ import { onboardingBlock } from './style.css';
 
 interface OnboardingBlockProps extends OnboardingBlockOption {
   mode: EdgelessSwitchMode;
-  style?: CSSProperties;
 }
 
 export const OnboardingBlock = ({
@@ -19,30 +18,37 @@ export const OnboardingBlock = ({
   enterDelay,
   leaveDelay,
   edgelessOnly,
+  customStyle,
+  sub,
 }: OnboardingBlockProps) => {
-  const blockStyles = {
+  const baseStyles = {
     '--bg': bg,
     '--enter-delay': enterDelay ? `${enterDelay}ms` : '0ms',
     '--leave-delay': leaveDelay ? `${leaveDelay}ms` : '0ms',
     zIndex: position ? 1 : 0,
     position: position || fromPosition ? 'absolute' : 'relative',
-    ...style,
   } as CSSProperties;
 
   if (mode === 'page') {
     if (fromPosition) {
-      blockStyles.left = fromPosition.x ?? 'unset';
-      blockStyles.top = fromPosition.y ?? 'unset';
+      baseStyles.left = fromPosition.x ?? 'unset';
+      baseStyles.top = fromPosition.y ?? 'unset';
     }
   } else {
     if (offset) {
-      blockStyles.transform = `translate(${offset.x}px, ${offset.y}px)`;
+      baseStyles.transform = `translate(${offset.x}px, ${offset.y}px)`;
     }
     if (position) {
-      blockStyles.left = position.x ?? 'unset';
-      blockStyles.top = position.y ?? 'unset';
+      baseStyles.left = position.x ?? 'unset';
+      baseStyles.top = position.y ?? 'unset';
     }
   }
+
+  const blockStyles = {
+    ...baseStyles,
+    ...style,
+    ...customStyle?.[mode],
+  } as CSSProperties;
 
   return (
     <div
@@ -56,6 +62,7 @@ export const OnboardingBlock = ({
       data-invisible={mode === 'page' && edgelessOnly}
     >
       {children}
+      {sub ? <OnboardingBlock mode={mode} {...sub} /> : null}
     </div>
   );
 };

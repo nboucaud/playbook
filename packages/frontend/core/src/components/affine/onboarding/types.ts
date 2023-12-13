@@ -1,3 +1,4 @@
+import type { CSSProperties } from '@vanilla-extract/css';
 import type { PropsWithChildren, ReactNode } from 'react';
 
 export type OnboardingStep = 'enter' | 'unfold' | 'edgeless-switch';
@@ -48,6 +49,9 @@ export interface ArticleOption {
 
   /** content that contains edgeless info */
   blocks: OnboardingBlockOption[];
+
+  /** apply an initial state for edgeless mode */
+  initState?: EdgelessSwitchState;
 }
 
 export interface OnboardingBlockOption extends PropsWithChildren {
@@ -69,4 +73,21 @@ export interface OnboardingBlockOption extends PropsWithChildren {
   enterDelay?: number;
   /** leave delay in ms */
   leaveDelay?: number;
+
+  style?: CSSProperties;
+
+  /** customize style for different mode */
+  customStyle?: {
+    page?: CSSProperties;
+    edgeless?: CSSProperties;
+  };
+
+  /** attach a sub block to current block */
+  sub?: OnboardingBlockOption;
+}
+
+export interface EdgelessSwitchState {
+  scale: number;
+  offsetX: number;
+  offsetY: number;
 }

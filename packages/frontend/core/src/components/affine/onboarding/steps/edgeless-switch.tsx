@@ -12,7 +12,11 @@ import {
 import { OnboardingBlock } from '../switch-widgets/block';
 import { EdgelessSwitchButtons } from '../switch-widgets/switch';
 import { ToolbarSVG } from '../switch-widgets/toolbar';
-import type { ArticleOption, EdgelessSwitchMode } from '../types';
+import type {
+  ArticleOption,
+  EdgelessSwitchMode,
+  EdgelessSwitchState,
+} from '../types';
 import * as styles from './edgeless-switch.css';
 
 interface EdgelessSwitchProps {
@@ -22,16 +26,10 @@ interface EdgelessSwitchProps {
 
 const offsetXRanges = [-2000, 2000];
 const offsetYRanges = [-2000, 2000];
-const scaleRange = [0.5, 2];
+const scaleRange = [0.2, 2];
 
-interface State {
-  scale: number;
-  offsetX: number;
-  offsetY: number;
-}
-
-const defaultState: State = {
-  scale: 0.8,
+const defaultState: EdgelessSwitchState = {
+  scale: 0.5,
   offsetX: 0,
   offsetY: 0,
 };
@@ -40,11 +38,15 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
   const windowRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const mouseDownRef = useRef(false);
-  const prevStateRef = useRef<State | null>(null);
+  const prevStateRef = useRef<EdgelessSwitchState | null>(null);
+  const enableScrollTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const turnOffScalingRef = useRef<() => void>(() => {});
 
+  const [scrollable, setScrollable] = useState(false);
   const [mode, setMode] = useState<EdgelessSwitchMode>('page');
-  const [state, setState] = useState<State>(defaultState);
+  const [state, setState] = useState<EdgelessSwitchState>(
+    article.initState ?? defaultState
+  );
 
   const onSwitchToPageMode = useCallback(() => setMode('page'), []);
   const onSwitchToEdgelessMode = useCallback(() => setMode('edgeless'), []);
@@ -55,6 +57,15 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
   const turnOnScaling = useCallback(() => {
     if (!windowRef.current) return;
     windowRef.current.classList.add('scaling');
+  }, []);
+
+  const enableScrollWithDelay = useCallback(() => {
+    enableScrollTimerRef.current = setTimeout(() => setScrollable(true), 500);
+  }, []);
+  const disableScroll = useCallback(() => {
+    if (enableScrollTimerRef.current)
+      clearTimeout(enableScrollTimerRef.current);
+    setScrollable(false);
   }, []);
 
   useEffect(() => {
@@ -137,10 +148,8 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
   useEffect(() => {
     if (mode === 'page') {
       // handle scale/drag
-      setState(state => {
-        prevStateRef.current = state;
-        return { ...defaultState, scale: 1 };
-      });
+      prevStateRef.current = { ...state };
+      setState({ ...defaultState, scale: 1 });
 
       // handle scroll
       canvasRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
@@ -148,7 +157,15 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
       if (prevStateRef.current) setState(prevStateRef.current);
       canvasRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
     }
+    // don't need to re-run when `state` changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
+
+  // to avoid `overflow: auto` clip the content before animation ends
+  useEffect(() => {
+    if (mode === 'page') enableScrollWithDelay();
+    else disableScroll();
+  }, [disableScroll, enableScrollWithDelay, mode]);
 
   const canvasStyle = {
     '--scale': state.scale,
@@ -160,6 +177,7 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
     <div
       ref={windowRef}
       data-mode={mode}
+      data-scroll={scrollable}
       className={styles.edgelessSwitchWindow}
       style={canvasStyle}
     >

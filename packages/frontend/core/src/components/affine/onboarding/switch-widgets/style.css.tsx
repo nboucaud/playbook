@@ -1,5 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
+import { block } from '../articles/blocks.css';
 import { onboardingVars } from '../style.css';
 
 export const switchButtons = style({
@@ -75,41 +76,74 @@ export const toolbarPop = style({
   },
 });
 
-export const onboardingBlock = style({
-  vars: {
-    '--enter-delay': '0ms',
-    '--leave-delay': '0ms',
+export const onboardingBlock = style([
+  block,
+  {
+    vars: {
+      '--enter-delay': '0ms',
+      '--leave-delay': '0ms',
+    },
+    padding: '0 28px',
+    cursor: 'unset',
+    borderRadius: '8px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+    marginBottom: '16px',
+    border: '2px solid transparent',
+
+    selectors: {
+      '&[data-bg-mode="true"]': {
+        background: 'var(--bg)',
+        // boxShadow: 'var(--affine-menu-shadow)', // dark-mode issue
+        boxShadow:
+          '0px 0px 12px 0px rgba(66, 65, 73, 0.14), 0px 0px 0px 0.5px #E3E3E4 inset',
+        padding: '18px 28px',
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+      },
+      '&[data-invisible="true"]': {
+        opacity: 0,
+        pointerEvents: 'none',
+        marginBottom: 0,
+      },
+      '&:last-child': {
+        marginBottom: 0,
+      },
+      '&[data-mode="edgeless"]': {
+        transition: `all ${onboardingVars.block.transition} var(--enter-delay)`,
+      },
+      '&[data-mode="page"]': {
+        transition: `all ${onboardingVars.block.transition} var(--leave-delay)`,
+      },
+    },
   },
-  padding: '0 28px',
-  cursor: 'unset',
+]);
+
+export const shadowSticker = style({
+  position: 'relative',
   borderRadius: '8px',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '16px',
-  marginBottom: '16px',
+  boxShadow: '10px 10px 0px 6px #000',
+  padding: '22px 24px',
+
+  fontSize: '15px',
+  lineHeight: '23px',
 
   selectors: {
-    '&[data-bg-mode="true"]': {
-      background: 'var(--bg)',
-      // boxShadow: 'var(--affine-menu-shadow)', // dark-mode issue
-      boxShadow:
-        '0px 0px 12px 0px rgba(66, 65, 73, 0.14), 0px 0px 0px 0.5px #E3E3E4 inset',
-      border: '2px solid rgba(0, 0, 0, 0.1)',
-      padding: '18px 28px',
-    },
-    '&[data-invisible="true"]': {
-      opacity: 0,
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
       pointerEvents: 'none',
-      marginBottom: 0,
+      borderRadius: 'inherit',
+      boxShadow: '0px 0px 0px 6px #000',
     },
-    '&:last-child': {
-      marginBottom: 0,
-    },
-    '&[data-mode="edgeless"]': {
-      transition: `all ${onboardingVars.block.transition} var(--enter-delay)`,
-    },
-    '&[data-mode="page"]': {
-      transition: `all ${onboardingVars.block.transition} var(--leave-delay)`,
+    // use data-mode to apply animation only for edgeless mode
+    // this is a hacky way to do it
+    '[data-mode=edgeless] &[data-animate=true]': {
+      animation: `${keyframes({
+        from: { boxShadow: '0px 0px 0px 0px #000' },
+        to: { boxShadow: '10px 10px 0px 6px #000' },
+      })} 0.6s ease forwards`,
     },
   },
 });

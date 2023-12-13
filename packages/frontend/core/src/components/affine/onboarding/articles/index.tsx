@@ -1,5 +1,5 @@
 import { article, articleWrapper, text, title } from '../curve-paper/paper.css';
-import type { ArticleId, ArticleOption } from '../types';
+import type { ArticleId, ArticleOption, EdgelessSwitchState } from '../types';
 // TODO: lazy load
 import { article0 } from './article-0';
 import { article1 } from './article-1';
@@ -145,7 +145,7 @@ const paperBriefs = {
       </article>
     </div>
   ),
-  '4': (
+  '3': (
     <div className={articleWrapper}>
       <article className={article}>
         <h1 className={title}>Breath of the Wild: Redefining Game Design</h1>
@@ -160,7 +160,7 @@ const paperBriefs = {
       </article>
     </div>
   ),
-  '1': (
+  '2': (
     <div className={articleWrapper}>
       <article className={article}>
         <h1 className={title}>Learning with earning with retrieval practice</h1>
@@ -177,7 +177,7 @@ const paperBriefs = {
       </article>
     </div>
   ),
-  '2': (
+  '1': (
     <div className={articleWrapper}>
       <article className={article}>
         <h1 className={title}>
@@ -196,7 +196,7 @@ const paperBriefs = {
       </article>
     </div>
   ),
-  '3': (
+  '4': (
     <div className={articleWrapper}>
       <article className={article}>
         <h1 className={title}>More Is Different</h1>
@@ -226,6 +226,34 @@ const contents = {
   '4': article4,
 };
 
+const states: Partial<Record<ArticleId, EdgelessSwitchState>> = {
+  '0': {
+    scale: 0.5,
+    offsetX: -330,
+    offsetY: -380,
+  },
+  '1': {
+    scale: 0.4,
+    offsetX: -330,
+    offsetY: -500,
+  },
+  '2': {
+    scale: 0.45,
+    offsetX: 0,
+    offsetY: -380,
+  },
+  '3': {
+    scale: 0.4,
+    offsetX: 100,
+    offsetY: -320,
+  },
+  '4': {
+    scale: 0.48,
+    offsetX: 10,
+    offsetY: -220,
+  },
+};
+
 export const articles: Record<ArticleId, ArticleOption> = ids.reduce(
   (acc, id) => {
     return {
@@ -236,6 +264,7 @@ export const articles: Record<ArticleId, ArticleOption> = ids.reduce(
         enterOptions: paperEnterAnimations[id],
         brief: paperBriefs[id],
         blocks: contents[id],
+        initState: states[id],
       } satisfies ArticleOption,
     };
   },

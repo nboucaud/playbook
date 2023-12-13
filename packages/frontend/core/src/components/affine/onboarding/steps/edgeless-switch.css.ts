@@ -31,7 +31,7 @@ export const edgelessSwitchWindow = style({
 
       backgroundImage: onboardingVars.canvas.bgImage,
       backgroundRepeat: 'repeat',
-      backgroundSize: 'calc(10px * var(--scale)) calc(10px * var(--scale))',
+      backgroundSize: 'calc(24px * var(--scale)) calc(24px * var(--scale))',
       backgroundPositionX: 'calc(var(--offset-x) * var(--scale))',
       backgroundPositionY: 'calc(var(--offset-y) * var(--scale))',
 
@@ -75,12 +75,14 @@ export const canvas = style({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'flex-start',
-  overflowY: 'auto',
+  overflowY: 'visible',
 
   selectors: {
+    '[data-scroll="true"] &': {
+      overflowY: 'auto',
+    },
     '[data-mode="edgeless"] &': {
       cursor: 'grab',
-      overflowY: 'visible',
     },
     '.grabbing[data-mode="edgeless"] &': {
       cursor: 'grabbing',
@@ -93,7 +95,7 @@ export const canvas = style({
 });
 
 export const page = style({
-  width: '752px',
+  width: '800px',
   minHeight: onboardingVars.article.h,
   paddingTop: '150px',
   paddingBottom: '150px',
