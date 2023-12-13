@@ -38,15 +38,19 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
   const windowRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const mouseDownRef = useRef(false);
-  const prevStateRef = useRef<EdgelessSwitchState | null>(null);
+  const prevStateRef = useRef<EdgelessSwitchState | null>(
+    article.initState ?? null
+  );
   const enableScrollTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const turnOffScalingRef = useRef<() => void>(() => {});
 
   const [scrollable, setScrollable] = useState(false);
   const [mode, setMode] = useState<EdgelessSwitchMode>('page');
-  const [state, setState] = useState<EdgelessSwitchState>(
-    article.initState ?? defaultState
-  );
+  const [state, setState] = useState<EdgelessSwitchState>({
+    scale: 1,
+    offsetX: 0,
+    offsetY: 0,
+  });
 
   const onSwitchToPageMode = useCallback(() => setMode('page'), []);
   const onSwitchToEdgelessMode = useCallback(() => setMode('edgeless'), []);
@@ -60,12 +64,21 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
   }, []);
 
   const enableScrollWithDelay = useCallback(() => {
-    enableScrollTimerRef.current = setTimeout(() => setScrollable(true), 500);
+    return new Promise<any>(resolve => {
+      enableScrollTimerRef.current = setTimeout(() => {
+        setScrollable(true);
+        resolve(true);
+      }, 500);
+    });
   }, []);
   const disableScroll = useCallback(() => {
     if (enableScrollTimerRef.current)
       clearTimeout(enableScrollTimerRef.current);
     setScrollable(false);
+  }, []);
+  const setStateAndSave = useCallback((state: EdgelessSwitchState) => {
+    setState(state);
+    prevStateRef.current = state;
   }, []);
 
   useEffect(() => {
@@ -89,13 +102,14 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
         Math.min(newScale, scaleRange[1]),
         scaleRange[0]
       );
-      setState(state => ({ ...state, scale: safeScale }));
+      setStateAndSave({ ...state, scale: safeScale });
       turnOffScalingRef.current?.();
     };
 
     // TODO: mobile support
     const onMouseDown = (e: MouseEvent) => {
-      e.stopPropagation();
+      const target = e.target as HTMLElement;
+      if (target.closest('[data-no-drag]')) return;
       e.preventDefault();
       mouseDownRef.current = true;
       toggleGrabbing(true);
@@ -114,7 +128,7 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
         offsetYRanges[0]
       );
 
-      setState({
+      setStateAndSave({
         scale: state.scale,
         offsetX: safeOffsetX,
         offsetY: safeOffsetY,
@@ -138,33 +152,33 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
     };
   }, [
     mode,
+    state,
     state.offsetX,
     state.offsetY,
     state.scale,
+    setStateAndSave,
     toggleGrabbing,
     turnOnScaling,
   ]);
 
-  useEffect(() => {
-    if (mode === 'page') {
-      // handle scale/drag
-      prevStateRef.current = { ...state };
-      setState({ ...defaultState, scale: 1 });
-
-      // handle scroll
-      canvasRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      if (prevStateRef.current) setState(prevStateRef.current);
-      canvasRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    // don't need to re-run when `state` changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
-
   // to avoid `overflow: auto` clip the content before animation ends
   useEffect(() => {
-    if (mode === 'page') enableScrollWithDelay();
-    else disableScroll();
+    if (mode === 'page') {
+      enableScrollWithDelay()
+        .then(() => {
+          // handle scroll
+          canvasRef.current?.scrollTo({ top: 0 });
+        })
+        .catch(console.error);
+
+      setState({ scale: 1, offsetX: 0, offsetY: 0 });
+    } else {
+      disableScroll();
+      canvasRef.current?.scrollTo({ top: 0 });
+
+      // save state when switching between modes
+      setState(prevStateRef.current ?? defaultState);
+    }
   }, [disableScroll, enableScrollWithDelay, mode]);
 
   const canvasStyle = {
@@ -192,20 +206,22 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
         </div>
       </div>
 
-      <EdgelessSwitchButtons
-        className={styles.switchButtons}
-        mode={mode}
-        onSwitchToPageMode={onSwitchToPageMode}
-        onSwitchToEdgelessMode={onSwitchToEdgelessMode}
-      />
+      <div data-no-drag className={styles.noDragWrapper}>
+        <EdgelessSwitchButtons
+          className={styles.switchButtons}
+          mode={mode}
+          onSwitchToPageMode={onSwitchToPageMode}
+          onSwitchToEdgelessMode={onSwitchToEdgelessMode}
+        />
 
-      <div className={styles.toolbar}>
-        <ToolbarSVG />
+        <div className={styles.toolbar}>
+          <ToolbarSVG />
+        </div>
+
+        <IconButton className={styles.backButton} onClick={onBack}>
+          <ArrowLeftSmallIcon />
+        </IconButton>
       </div>
-
-      <IconButton className={styles.backButton} onClick={onBack}>
-        <ArrowLeftSmallIcon />
-      </IconButton>
     </div>
   );
 };

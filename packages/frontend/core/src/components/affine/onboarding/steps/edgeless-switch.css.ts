@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 
 import { onboardingVars } from '../style.css';
 
@@ -71,7 +71,7 @@ export const canvas = style({
   width: '100%',
   height: '100%',
   transform: 'scale(var(--scale)) translate(var(--offset-x), var(--offset-y))',
-  transition: 'transform 0.3s ease',
+  transition: 'transform 0.36s ease',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'flex-start',
@@ -105,4 +105,13 @@ export const backButton = style({
   position: 'absolute',
   top: '20px',
   left: '20px',
+});
+
+export const noDragWrapper = style({
+  position: 'absolute',
+  inset: 0,
+  pointerEvents: 'none',
+});
+globalStyle(`${noDragWrapper} > *`, {
+  pointerEvents: 'auto',
 });

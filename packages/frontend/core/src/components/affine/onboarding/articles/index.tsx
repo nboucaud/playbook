@@ -138,9 +138,7 @@ const paperBriefs = {
           “With all the time you spend watching TV,” he tells me, “you could
           have written a novel by now.” It’s hard to disagree with the sentiment
           — writing a novel is undoubtedly a better use of time than watching TV
-          — but what about the hidden assumption? Such comments imply that time
-          is “fungible” — that time spent watching TV can just as easily be
-          spent writing a novel. And sadly, that’s just not the case.
+          — but what about the hidden ...
         </p>
       </article>
     </div>
@@ -150,12 +148,9 @@ const paperBriefs = {
       <article className={article}>
         <h1 className={title}>Breath of the Wild: Redefining Game Design</h1>
         <p className={text}>
-          “With all the time you spend watching TV,” he tells me, “you could
-          have written a novel by now.” It’s hard to disagree with the sentiment
-          — writing a novel is undoubtedly a better use of time than watching TV
-          — but what about the hidden assumption? Such comments imply that time
-          is “fungible” — that time spent watching TV can just as easily be
-          spent writing a novel. And sadly, that’s just not the case.
+          At GDC 2017, Hidemaro Fujibayashi, Satoru Takizawa, and Takuhiro Dohta
+          from Nintendo shared their insights on The Legend of Zelda: Breath of
+          the Wild&apos;s groundbreaking game mechanics. One standout ...
         </p>
       </article>
     </div>
@@ -171,8 +166,7 @@ const paperBriefs = {
         <p className={text}>
           Students often re-read, underline, or highlight materials, thinking
           that it will help them learn better. But, the best method for really
-          turning information into long-term memory is to use what is called
-          ‘retrieval practice’.
+          ...
         </p>
       </article>
     </div>
@@ -189,9 +183,7 @@ const paperBriefs = {
           Cloud apps like Google Docs and Trello are popular because they enable
           real-time collaboration with colleagues, and they make it easy for us
           to access our work from all of our devices. However, by centralizing
-          data storage on servers, cloud apps also take away ownership and
-          agency from users. If a service shuts down, the software stops
-          functioning, and data created with that software is lost.
+          ...
         </p>
       </article>
     </div>
@@ -207,11 +199,7 @@ const paperBriefs = {
         <p className={text}>
           The reductionist hypothesis may still be a topic for controversy among
           philosophers, but among the great majority of active scientists I
-          think it is accepted without questions. The workings of our minds and
-          bodies, and of all the animate or inanimate matter of which we have
-          any detailed knowledge, are assumed to be controlled by the same set
-          of fundamental laws, which except under certain extreme conditions we
-          feel we know pretty well.
+          think it is accepted without ...
         </p>
       </article>
     </div>
