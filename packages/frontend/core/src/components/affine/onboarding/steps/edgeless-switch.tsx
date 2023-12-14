@@ -1,5 +1,4 @@
-import { IconButton } from '@affine/component';
-import { ArrowLeftSmallIcon } from '@blocksuite/icons';
+import { Button } from '@affine/component';
 import { debounce } from 'lodash-es';
 import {
   type CSSProperties,
@@ -22,6 +21,7 @@ import * as styles from './edgeless-switch.css';
 interface EdgelessSwitchProps {
   article: ArticleOption;
   onBack?: () => void;
+  onNext?: () => void;
 }
 
 const offsetXRanges = [-2000, 2000];
@@ -34,7 +34,11 @@ const defaultState: EdgelessSwitchState = {
   offsetY: 0,
 };
 
-export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
+export const EdgelessSwitch = ({
+  article,
+  onBack,
+  onNext,
+}: EdgelessSwitchProps) => {
   const windowRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const mouseDownRef = useRef(false);
@@ -80,6 +84,10 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
     setState(state);
     prevStateRef.current = state;
   }, []);
+  const onNextClick = useCallback(() => {
+    if (mode === 'page') setMode('edgeless');
+    else onNext?.();
+  }, [mode, onNext]);
 
   useEffect(() => {
     turnOffScalingRef.current = debounce(() => {
@@ -207,20 +215,23 @@ export const EdgelessSwitch = ({ article, onBack }: EdgelessSwitchProps) => {
       </div>
 
       <div data-no-drag className={styles.noDragWrapper}>
-        <EdgelessSwitchButtons
-          className={styles.switchButtons}
-          mode={mode}
-          onSwitchToPageMode={onSwitchToPageMode}
-          onSwitchToEdgelessMode={onSwitchToEdgelessMode}
-        />
+        <header className={styles.header}>
+          <Button size="extraLarge" onClick={onBack}>
+            Back
+          </Button>
+          <EdgelessSwitchButtons
+            mode={mode}
+            onSwitchToPageMode={onSwitchToPageMode}
+            onSwitchToEdgelessMode={onSwitchToEdgelessMode}
+          />
+          <Button size="extraLarge" type="primary" onClick={onNextClick}>
+            Next
+          </Button>
+        </header>
 
         <div className={styles.toolbar}>
           <ToolbarSVG />
         </div>
-
-        <IconButton className={styles.backButton} onClick={onBack}>
-          <ArrowLeftSmallIcon />
-        </IconButton>
       </div>
     </div>
   );

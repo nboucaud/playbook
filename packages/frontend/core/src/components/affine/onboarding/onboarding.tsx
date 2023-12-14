@@ -9,7 +9,7 @@ interface OnboardingProps {
   onOpenApp?: () => void;
 }
 
-export const Onboarding = (_: OnboardingProps) => {
+export const Onboarding = ({ onOpenApp }: OnboardingProps) => {
   const [status, setStatus] = useState<{
     activeId: ArticleId | null;
     unfoldingId: ArticleId | null;
@@ -66,6 +66,7 @@ export const Onboarding = (_: OnboardingProps) => {
                   show={status.activeId === null || status.activeId === id}
                   onFoldChange={onFoldChange}
                   onFoldChanged={onFoldChanged}
+                  onOpenApp={onOpenApp}
                 />
               </div>
             );

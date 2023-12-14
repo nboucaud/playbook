@@ -45,13 +45,6 @@ export const edgelessSwitchWindow = style({
   },
 });
 
-export const switchButtons = style({
-  position: 'absolute',
-  top: '43px',
-  left: '50%',
-  transform: 'translateX(-50%)',
-});
-
 export const toolbar = style({
   position: 'absolute',
   bottom: '20px',
@@ -101,12 +94,6 @@ export const page = style({
   paddingBottom: '150px',
 });
 
-export const backButton = style({
-  position: 'absolute',
-  top: '20px',
-  left: '20px',
-});
-
 export const noDragWrapper = style({
   position: 'absolute',
   inset: 0,
@@ -114,4 +101,14 @@ export const noDragWrapper = style({
 });
 globalStyle(`${noDragWrapper} > *`, {
   pointerEvents: 'auto',
+});
+
+export const header = style({
+  position: 'absolute',
+  top: '0',
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '24px',
 });

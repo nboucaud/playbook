@@ -11,6 +11,7 @@ interface PaperStepsProps {
   article: ArticleOption;
   onFoldChange?: (id: ArticleId, v: boolean) => void;
   onFoldChanged?: (id: ArticleId, v: boolean) => void;
+  onOpenApp?: () => void;
 }
 
 export const PaperSteps = ({
@@ -18,6 +19,7 @@ export const PaperSteps = ({
   article,
   onFoldChange,
   onFoldChanged,
+  onOpenApp,
 }: PaperStepsProps) => {
   const [stage, setStage] = useState<OnboardingStep>('enter');
   const [fold, setFold] = useState(true);
@@ -60,6 +62,10 @@ export const PaperSteps = ({
       onChanged={_onFoldChanged}
     />
   ) : (
-    <EdgelessSwitch article={article} onBack={onEdgelessSwitchBack} />
+    <EdgelessSwitch
+      article={article}
+      onBack={onEdgelessSwitchBack}
+      onNext={onOpenApp}
+    />
   );
 };
