@@ -1,14 +1,15 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { AnimateIn } from './steps/animate-in';
 import { EdgelessSwitch } from './steps/edgeless-switch';
 import { Unfolding } from './steps/unfolding';
-import type { ArticleId, OnboardingStep } from './types';
+import type { ArticleId, OnboardingStatus, OnboardingStep } from './types';
 import { type ArticleOption } from './types';
 
 interface PaperStepsProps {
   show?: boolean;
   article: ArticleOption;
+  status: OnboardingStatus;
   onFoldChange?: (id: ArticleId, v: boolean) => void;
   onFoldChanged?: (id: ArticleId, v: boolean) => void;
   onOpenApp?: () => void;
@@ -17,6 +18,7 @@ interface PaperStepsProps {
 export const PaperSteps = ({
   show,
   article,
+  status,
   onFoldChange,
   onFoldChanged,
   onOpenApp,
@@ -50,6 +52,13 @@ export const PaperSteps = ({
     // to apply fold animation
     setTimeout(() => _onFoldChange(true));
   }, [_onFoldChange]);
+
+  useEffect(() => {
+    if (stage === 'unfold' && status.unfoldingId === article.id) {
+      console.log('unfold', article.id);
+      setFold(false);
+    }
+  }, [article.id, stage, status.unfoldingId]);
 
   if (!show) return null;
   return stage === 'enter' ? (

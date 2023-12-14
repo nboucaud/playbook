@@ -50,6 +50,11 @@ export const onboardingVars = {
   block: {
     transition: '0.5s ease',
   },
+
+  animateIn: {
+    tooltipShowUpDelay: '5s',
+    nextButtonShowUpDelay: '20s',
+  },
 };
 
 export const perspective = style({
@@ -101,4 +106,21 @@ export const paperLocation = style({
   position: 'absolute',
   left: `calc(var(--offset-x) - ${onboardingVars.paper.w} / 2)`,
   top: `calc(var(--offset-y) - ${onboardingVars.paper.h} / 2)`,
+});
+
+export const tipsWrapper = style({
+  position: 'absolute',
+  width: `calc(${onboardingVars.article.w} - 48px)`,
+  top: `calc(-${onboardingVars.article.h} / 2 + 24px)`,
+  pointerEvents: 'none',
+  display: 'flex',
+  justifyContent: 'center',
+  opacity: 0,
+  transition: '0.3s ease 1s',
+  selectors: {
+    '&[data-visible="true"]': {
+      pointerEvents: 'auto',
+      opacity: 1,
+    },
+  },
 });

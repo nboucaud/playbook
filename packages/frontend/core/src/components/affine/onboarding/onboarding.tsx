@@ -1,19 +1,20 @@
 import { type CSSProperties, useCallback, useState } from 'react';
 
+import { AnimateInTooltip } from './animate-in-tooltip';
 import { articles } from './articles';
 import { PaperSteps } from './paper-steps';
 import * as styles from './style.css';
-import type { ArticleId, ArticleOption } from './types';
+import type { ArticleId, ArticleOption, OnboardingStatus } from './types';
 
 interface OnboardingProps {
   onOpenApp?: () => void;
 }
 
 export const Onboarding = ({ onOpenApp }: OnboardingProps) => {
-  const [status, setStatus] = useState<{
-    activeId: ArticleId | null;
-    unfoldingId: ArticleId | null;
-  }>({ activeId: null, unfoldingId: null });
+  const [status, setStatus] = useState<OnboardingStatus>({
+    activeId: null,
+    unfoldingId: null,
+  });
 
   const onFoldChange = useCallback((id: ArticleId, v: boolean) => {
     setStatus(s => {
@@ -62,6 +63,7 @@ export const Onboarding = ({ onOpenApp }: OnboardingProps) => {
             return (
               <div style={style} key={id}>
                 <PaperSteps
+                  status={status}
                   article={article}
                   show={status.activeId === null || status.activeId === id}
                   onFoldChange={onFoldChange}
@@ -72,6 +74,12 @@ export const Onboarding = ({ onOpenApp }: OnboardingProps) => {
             );
           }
         )}
+
+        <div className={styles.tipsWrapper} data-visible={!status.activeId}>
+          <AnimateInTooltip
+            onNext={() => setStatus({ activeId: null, unfoldingId: '4' })}
+          />
+        </div>
       </div>
     </div>
   );

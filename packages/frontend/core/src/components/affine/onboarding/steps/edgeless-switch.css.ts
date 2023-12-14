@@ -109,7 +109,7 @@ export const header = style({
   width: '100%',
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   padding: '24px',
   pointerEvents: 'none',
 });

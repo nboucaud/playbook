@@ -91,3 +91,8 @@ export interface EdgelessSwitchState {
   offsetX: number;
   offsetY: number;
 }
+
+export interface OnboardingStatus {
+  activeId: ArticleId | null;
+  unfoldingId: ArticleId | null;
+}
