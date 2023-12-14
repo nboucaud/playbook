@@ -1,4 +1,9 @@
 import type { OnboardingBlockOption } from '../types';
+import embed1png from './assets/article-2-embed-1.png';
+import illustration1png from './assets/article-2-illustration-1.jpg';
+import illustration2png from './assets/article-2-illustration-2.jpg';
+import note1png from './assets/article-2-note-1.png';
+import note2png from './assets/article-2-note-2.png';
 
 export const article2: Array<OnboardingBlockOption> = [
   {
@@ -35,7 +40,7 @@ export const article2: Array<OnboardingBlockOption> = [
           className="illustration"
           draggable={false}
           width="100%"
-          src={require('./assets/article-2-illustration-1.jpg')}
+          src={illustration1png}
         />
         <p>
           It simply means trying to retrieve the information from your own
@@ -78,7 +83,7 @@ export const article2: Array<OnboardingBlockOption> = [
           className="illustration"
           draggable={false}
           width="100%"
-          src={require('./assets/article-2-illustration-2.jpg')}
+          src={illustration2png}
         />
       </>
     ),
@@ -141,26 +146,14 @@ export const article2: Array<OnboardingBlockOption> = [
   },
 
   {
-    children: (
-      <img
-        draggable={false}
-        width={380}
-        src={require('./assets/article-2-embed-1.png')}
-      />
-    ),
+    children: <img draggable={false} width={380} src={embed1png} />,
     edgelessOnly: true,
     position: { x: -300, y: 0 },
     fromPosition: { x: 300, y: -300 },
   },
 
   {
-    children: (
-      <img
-        draggable={false}
-        width={309}
-        src={require('./assets/article-2-note-1.png')}
-      />
-    ),
+    children: <img draggable={false} width={309} src={note1png} />,
     edgelessOnly: true,
     position: { x: -360, y: -20 },
     fromPosition: { x: -360, y: -100 },
@@ -173,13 +166,7 @@ export const article2: Array<OnboardingBlockOption> = [
   },
 
   {
-    children: (
-      <img
-        draggable={false}
-        width={1800}
-        src={require('./assets/article-2-note-2.png')}
-      />
-    ),
+    children: <img draggable={false} width={1800} src={note2png} />,
     edgelessOnly: true,
     position: { x: 0, y: 0 },
     fromPosition: { x: 2000, y: -2000 },

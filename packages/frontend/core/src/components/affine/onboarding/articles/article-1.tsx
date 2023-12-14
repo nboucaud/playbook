@@ -2,6 +2,8 @@ import clsx from 'clsx';
 
 import { PageLink } from '../switch-widgets/page-link';
 import type { OnboardingBlockOption } from '../types';
+import bookmark1png from './assets/article-1-bookmark-1.png';
+import illustration1png from './assets/article-1-illustration-1.png';
 import Article1Illustration2 from './assets/article-1-illustration-2';
 import Article1Note1 from './assets/article-1-note-1';
 import Article1Note2 from './assets/article-1-note-2';
@@ -57,11 +59,7 @@ export const article1: Array<OnboardingBlockOption> = [
     bg: '#F3F0FF',
     children: (
       <>
-        <img
-          draggable={false}
-          width="100%"
-          src={require('./assets/article-1-bookmark-1.png')}
-        />
+        <img draggable={false} width="100%" src={bookmark1png} />
         <p className={clsx(quote)}>
           If you are an entrepreneur interested in building developer
           infrastructure, all of the above suggests an interesting market
@@ -247,13 +245,7 @@ export const article1: Array<OnboardingBlockOption> = [
   },
 
   {
-    children: (
-      <img
-        width={784}
-        draggable={false}
-        src={require('./assets/article-1-illustration-1.png')}
-      />
-    ),
+    children: <img width={784} draggable={false} src={illustration1png} />,
     edgelessOnly: true,
     position: { x: -600, y: 1000 },
     fromPosition: { x: -1000, y: 1500 },

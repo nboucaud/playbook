@@ -1,5 +1,9 @@
 import { ShadowSticker } from '../switch-widgets/shadow-sticker';
 import type { OnboardingBlockOption } from '../types';
+import bookmark1png from './assets/article-4-bookmark-1.png';
+import bookmark2png from './assets/article-4-bookmark-2.png';
+import illustration1jpg from './assets/article-4-illustration-1.jpg';
+import illustration2jpg from './assets/article-4-illustration-2.jpg';
 
 export const article4: Array<OnboardingBlockOption> = [
   {
@@ -15,11 +19,7 @@ export const article4: Array<OnboardingBlockOption> = [
           Broken symmetry and the nature of the hierarchical structure of
           science
         </h2>
-        <img
-          draggable={false}
-          width="100%"
-          src={require('./assets/article-4-bookmark-1.png')}
-        />
+        <img draggable={false} width="100%" src={bookmark1png} />
         <p>
           The reductionist hypothesis may still be a topic for controversy among
           philosophers, but among the great majority of active scientists I
@@ -208,13 +208,7 @@ export const article4: Array<OnboardingBlockOption> = [
 
   //
   {
-    children: (
-      <img
-        draggable={false}
-        width={500}
-        src={require('./assets/article-4-bookmark-2.png')}
-      />
-    ),
+    children: <img draggable={false} width={500} src={bookmark2png} />,
     edgelessOnly: true,
     position: { x: 0, y: 760 },
   },
@@ -225,7 +219,7 @@ export const article4: Array<OnboardingBlockOption> = [
         className="illustration"
         draggable={false}
         width={322}
-        src={require('./assets/article-4-illustration-1.jpg')}
+        src={illustration1jpg}
       />
     ),
     edgelessOnly: true,
@@ -239,7 +233,7 @@ export const article4: Array<OnboardingBlockOption> = [
           className="illustration"
           draggable={false}
           width={213}
-          src={require('./assets/article-4-illustration-2.jpg')}
+          src={illustration2jpg}
         />
       ),
       edgelessOnly: true,

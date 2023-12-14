@@ -1,4 +1,7 @@
 import type { OnboardingBlockOption } from '../types';
+import bookmark1png from './assets/article-0-bookmark-1.png';
+import bookmark2png from './assets/article-0-bookmark-2.png';
+import embed1png from './assets/article-0-embed-1.png';
 import Article0Note1 from './assets/article-0-note-1';
 import Article0Note2 from './assets/article-0-note-2';
 import Article0Note3 from './assets/article-0-note-3';
@@ -45,11 +48,7 @@ export const article0: Array<OnboardingBlockOption> = [
     bg: '#F9E8FF',
     children: (
       <>
-        <img
-          draggable={false}
-          width="100%"
-          src={require('./assets/article-0-bookmark-1.png')}
-        />
+        <img draggable={false} width="100%" src={bookmark1png} />
         <p>
           If you want to be more productive then, you have to recognize this
           fact and deal with it. First, you have to make the best of each kind
@@ -177,13 +176,7 @@ export const article0: Array<OnboardingBlockOption> = [
 
   {
     // children: <Article0Bookmark2 />,
-    children: (
-      <img
-        draggable={false}
-        width={418}
-        src={require('./assets/article-0-bookmark-2.png')}
-      />
-    ),
+    children: <img draggable={false} width={418} src={bookmark2png} />,
     edgelessOnly: true,
     position: { x: 700, y: 230 },
     fromPosition: { x: 1000, y: 0 },
@@ -234,13 +227,7 @@ export const article0: Array<OnboardingBlockOption> = [
 
   {
     // children: <Article0Embed1 />,
-    children: (
-      <img
-        draggable={false}
-        width={450}
-        src={require('./assets/article-0-embed-1.png')}
-      />
-    ),
+    children: <img draggable={false} width={450} src={embed1png} />,
     edgelessOnly: true,
     position: { x: 1050, y: 630 },
     fromPosition: { x: 1400, y: 630 },

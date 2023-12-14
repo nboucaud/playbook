@@ -1,4 +1,10 @@
 import type { OnboardingBlockOption } from '../types';
+import bookmark1png from './assets/article-3-bookmark-1.png';
+import illustration1jpg from './assets/article-3-illustration-1.jpg';
+import illustration2jpg from './assets/article-3-illustration-2.jpg';
+import illustration3jpg from './assets/article-3-illustration-3.jpg';
+import illustration4jpg from './assets/article-3-illustration-4.jpg';
+import illustration5jpg from './assets/article-3-illustration-5.jpg';
 
 export const article3: Array<OnboardingBlockOption> = [
   {
@@ -7,7 +13,7 @@ export const article3: Array<OnboardingBlockOption> = [
         className="illustration"
         draggable={false}
         width={290}
-        src={require('./assets/article-3-illustration-5.jpg')}
+        src={illustration5jpg}
       />
     ),
     edgelessOnly: true,
@@ -17,13 +23,7 @@ export const article3: Array<OnboardingBlockOption> = [
   },
 
   {
-    children: (
-      <img
-        draggable={false}
-        width={450}
-        src={require('./assets/article-3-bookmark-1.png')}
-      />
-    ),
+    children: <img draggable={false} width={450} src={bookmark1png} />,
     edgelessOnly: true,
     position: { x: 500, y: 200 },
     fromPosition: { x: 1000, y: -200 },
@@ -85,7 +85,7 @@ export const article3: Array<OnboardingBlockOption> = [
           className="illustration"
           draggable={false}
           width="100%"
-          src={require('./assets/article-3-illustration-1.jpg')}
+          src={illustration1jpg}
         />
       </>
     ),
@@ -108,7 +108,7 @@ export const article3: Array<OnboardingBlockOption> = [
           className="illustration"
           draggable={false}
           width="100%"
-          src={require('./assets/article-3-illustration-2.jpg')}
+          src={illustration2jpg}
         />
       </>
     ),
@@ -131,7 +131,7 @@ export const article3: Array<OnboardingBlockOption> = [
           className="illustration"
           draggable={false}
           width="100%"
-          src={require('./assets/article-3-illustration-3.jpg')}
+          src={illustration3jpg}
         />
       </>
     ),
@@ -152,7 +152,7 @@ export const article3: Array<OnboardingBlockOption> = [
           className="illustration"
           draggable={false}
           width="100%"
-          src={require('./assets/article-3-illustration-4.jpg')}
+          src={illustration4jpg}
         />
         <p>
           List all possible behaviors, terrain features, and items. For example,
