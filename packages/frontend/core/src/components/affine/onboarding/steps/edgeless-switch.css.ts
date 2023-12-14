@@ -111,4 +111,8 @@ export const header = style({
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '24px',
+  pointerEvents: 'none',
+});
+globalStyle(`${header} > *`, {
+  pointerEvents: 'auto',
 });

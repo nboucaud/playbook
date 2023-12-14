@@ -1,24 +1,13 @@
+import { CounterNote } from '../switch-widgets/counter-note';
 import type { OnboardingBlockOption } from '../types';
 import bookmark1png from './assets/article-0-bookmark-1.png';
 import bookmark2png from './assets/article-0-bookmark-2.png';
 import embed1png from './assets/article-0-embed-1.png';
-import Article0Note1 from './assets/article-0-note-1';
-import Article0Note2 from './assets/article-0-note-2';
-import Article0Note3 from './assets/article-0-note-3';
-import Article0Note4 from './assets/article-0-note-4';
-import Article0Note5 from './assets/article-0-note-5';
 
 export const article0: Array<OnboardingBlockOption> = [
   {
     children: <h1>HOWTO: Be more productive</h1>,
     offset: { x: -150, y: 0 },
-  },
-  {
-    children: <Article0Note1 />,
-    edgelessOnly: true,
-    position: { x: -150, y: 220 },
-    fromPosition: { x: -400, y: 220 },
-    enterDelay: 200,
   },
   {
     bg: '#f5f5f5',
@@ -43,6 +32,24 @@ export const article0: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: -120, y: 80 },
+    sub: {
+      children: (
+        <CounterNote
+          index={1}
+          width={290}
+          label="Time isn't interchangeable; it varies in quality due to circumstances and mental states."
+          animationDelay={300}
+          color="#6E52DF"
+        />
+      ),
+      enterDelay: 300,
+      position: {},
+      style: {
+        bottom: 'calc(100% + 20px)',
+        left: -40,
+      },
+      edgelessOnly: true,
+    },
   },
   {
     bg: '#F9E8FF',
@@ -58,13 +65,6 @@ export const article0: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: 250, y: 100 },
-  },
-
-  {
-    children: <Article0Note2 />,
-    edgelessOnly: true,
-    position: {},
-    offset: { x: -630, y: -190 },
   },
 
   {
@@ -93,13 +93,21 @@ export const article0: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: -600, y: -130 },
-  },
-
-  {
-    children: <Article0Note3 />,
-    edgelessOnly: true,
-    position: {},
-    offset: { x: -80, y: -120 },
+    sub: {
+      children: (
+        <CounterNote
+          index={2}
+          width={290}
+          label="Prioritize, question, and work towards productivity."
+          animationDelay={800}
+          color="#6E52DF"
+        />
+      ),
+      edgelessOnly: true,
+      enterDelay: 800,
+      position: {},
+      style: { bottom: 'calc(100% + 20px)', left: -40 },
+    },
   },
 
   {
@@ -135,14 +143,23 @@ export const article0: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: -50, y: -50 },
+    sub: {
+      children: (
+        <CounterNote
+          index={3}
+          width={290}
+          label="Diverse tasks enhance productivity, creativity, and combat boredom effectively."
+          animationDelay={1200}
+          color="#6E52DF"
+        />
+      ),
+      edgelessOnly: true,
+      enterDelay: 1200,
+      position: {},
+      style: { bottom: 'calc(100% + 20px)', left: -40 },
+    },
   },
 
-  {
-    children: <Article0Note4 />,
-    edgelessOnly: true,
-    position: {},
-    offset: { x: 770, y: -480 },
-  },
   {
     bg: '#DFF4F3',
     children: (
@@ -172,6 +189,21 @@ export const article0: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: 800, y: -400 },
+    sub: {
+      children: (
+        <CounterNote
+          index={4}
+          width={290}
+          label="Organize tasks by category to manage overwhelming to-do lists efficiently."
+          animationDelay={1500}
+          color="#6E52DF"
+        />
+      ),
+      edgelessOnly: true,
+      enterDelay: 1500,
+      position: {},
+      style: { bottom: 'calc(100% + 20px)', left: -40 },
+    },
   },
 
   {
@@ -180,13 +212,6 @@ export const article0: Array<OnboardingBlockOption> = [
     edgelessOnly: true,
     position: { x: 700, y: 230 },
     fromPosition: { x: 1000, y: 0 },
-  },
-
-  {
-    children: <Article0Note5 />,
-    edgelessOnly: true,
-    position: { x: 400, y: 150 },
-    offset: { x: 770, y: 0 },
   },
 
   {
@@ -223,6 +248,21 @@ export const article0: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: 1200, y: -1600 },
+    sub: {
+      children: (
+        <CounterNote
+          index={5}
+          width={290}
+          label="Integrate tasks into daily routines, create more high-quality free time."
+          animationDelay={1500}
+          color="#6E52DF"
+        />
+      ),
+      edgelessOnly: true,
+      enterDelay: 1500,
+      position: {},
+      style: { bottom: 'calc(100% + 20px)', left: -40 },
+    },
   },
 
   {

@@ -1,28 +1,17 @@
 import clsx from 'clsx';
 
+import { CounterNote } from '../switch-widgets/counter-note';
 import { PageLink } from '../switch-widgets/page-link';
 import type { OnboardingBlockOption } from '../types';
 import bookmark1png from './assets/article-1-bookmark-1.png';
 import illustration1png from './assets/article-1-illustration-1.png';
 import Article1Illustration2 from './assets/article-1-illustration-2';
-import Article1Note1 from './assets/article-1-note-1';
-import Article1Note2 from './assets/article-1-note-2';
-import Article1Note3 from './assets/article-1-note-3';
-import Article1Note4 from './assets/article-1-note-4';
-import Article1Note5 from './assets/article-1-note-5';
 import { hr, link, quote } from './blocks.css';
 
 export const article1: Array<OnboardingBlockOption> = [
   {
     children: <h1>This is Local-first software</h1>,
     offset: { x: -600, y: 0 },
-  },
-  {
-    children: <Article1Note1 />,
-    edgelessOnly: true,
-    position: { x: -600, y: 220 },
-    fromPosition: { x: -1000, y: 220 },
-    enterDelay: 200,
   },
   {
     bg: '#F5F5F5',
@@ -45,14 +34,21 @@ export const article1: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: -570, y: 80 },
-  },
-
-  {
-    children: <Article1Note2 />,
-    edgelessOnly: true,
-    position: { x: -600, y: 550 },
-    fromPosition: { x: -800, y: 550 },
-    enterDelay: 300,
+    sub: {
+      children: (
+        <CounterNote
+          index={1}
+          width={500}
+          label="Cloud apps enable collaboration but can jeopardize data ownership; time varies."
+          animationDelay={300}
+          color="#E660A4"
+        />
+      ),
+      edgelessOnly: true,
+      enterDelay: 300,
+      position: {},
+      style: { bottom: 'calc(100% + 20px)', left: -40 },
+    },
   },
 
   {
@@ -72,14 +68,21 @@ export const article1: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: -570, y: 200 },
-  },
-
-  {
-    children: <Article1Note3 />,
-    edgelessOnly: true,
-    position: { x: 260, y: 500 },
-    fromPosition: {},
-    enterDelay: 400,
+    sub: {
+      children: (
+        <CounterNote
+          index={2}
+          width={300}
+          label="Local-first software emphasizes collaboration, ownership, and data control for users."
+          animationDelay={600}
+          color="#E660A4"
+        />
+      ),
+      edgelessOnly: true,
+      enterDelay: 600,
+      position: {},
+      style: { bottom: 'calc(100% + 20px)', left: -40 },
+    },
   },
 
   {
@@ -108,6 +111,21 @@ export const article1: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: 290, y: -140 },
+    sub: {
+      children: (
+        <CounterNote
+          index={3}
+          width={300}
+          label="Examining data storage, CRDTs' role, prototypes, and future possibilities."
+          animationDelay={900}
+          color="#E660A4"
+        />
+      ),
+      edgelessOnly: true,
+      enterDelay: 900,
+      position: {},
+      style: { bottom: 'calc(100% + 20px)', left: -40 },
+    },
   },
 
   {
@@ -135,14 +153,6 @@ export const article1: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: 350, y: -850 },
-  },
-
-  {
-    children: <Article1Note4 />,
-    edgelessOnly: true,
-    position: { x: 300, y: 1000 },
-    fromPosition: {},
-    enterDelay: 500,
   },
 
   {
@@ -193,14 +203,21 @@ export const article1: Array<OnboardingBlockOption> = [
     ),
     offset: { x: 300, y: -250 },
     customStyle: { edgeless: { width: 500 } },
-  },
-
-  {
-    children: <Article1Note5 />,
-    edgelessOnly: true,
-    position: { x: 1080, y: 960 },
-    fromPosition: {},
-    enterDelay: 600,
+    sub: {
+      children: (
+        <CounterNote
+          index={4}
+          width={400}
+          label="Motivation, ideals, existing models, architecture, CRDTs, prototypes, future, help, conclusions."
+          animationDelay={1200}
+          color="#E660A4"
+        />
+      ),
+      edgelessOnly: true,
+      enterDelay: 1200,
+      position: {},
+      style: { bottom: 'calc(100% + 20px)', left: -40 },
+    },
   },
 
   {
@@ -242,6 +259,21 @@ export const article1: Array<OnboardingBlockOption> = [
       </>
     ),
     offset: { x: 900, y: -950 },
+    sub: {
+      children: (
+        <CounterNote
+          index={5}
+          width={400}
+          label="Online collaboration's benefits but emotional attachment and downsides discussed."
+          animationDelay={1500}
+          color="#E660A4"
+        />
+      ),
+      edgelessOnly: true,
+      enterDelay: 1500,
+      position: {},
+      style: { bottom: 'calc(100% + 20px)', left: -40 },
+    },
   },
 
   {
