@@ -48,6 +48,13 @@ const OnboardingModal = lazy(() =>
     default: module.OnboardingModal,
   }))
 );
+const WorkspaceGuideModal = lazy(() =>
+  import('../components/affine/onboarding/workspace-guide-modal').then(
+    module => ({
+      default: module.WorkspaceGuideModal,
+    })
+  )
+);
 
 const SignOutModal = lazy(() =>
   import('../components/affine/sign-out-modal').then(module => ({
@@ -146,6 +153,7 @@ export function CurrentWorkspaceModals() {
           <OnboardingModal />
         </Suspense>
       )}
+      <WorkspaceGuideModal />
       {currentWorkspace && <Setting />}
     </>
   );
