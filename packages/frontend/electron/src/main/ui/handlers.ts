@@ -3,9 +3,9 @@ import { getLinkPreview } from 'link-preview-js';
 
 import { isMacOS } from '../../shared/utils';
 import { persistentConfig } from '../config-storage/persist';
-import { eventEmitter } from '../emitter';
 import { logger } from '../logger';
-import { getMainWindow } from '../main-window';
+import { getMainWindow, initMainWindow } from '../main-window';
+import { getOnboardingWindow } from '../onboarding';
 import type { NamespaceHandlers } from '../type';
 import { launchStage } from '../windows-manager/stage';
 import { getChallengeResponse } from './challenge';
@@ -54,9 +54,10 @@ export const uiHandlers = {
       launchStage.value = 'main';
       persistentConfig.patch('onBoarding', false);
     }
-    // TODO: use eventEmitter to avoid circular dependency temporarily
-    eventEmitter.emit('window:main:open'); // see ../main-window.ts
-    eventEmitter.emit('window:onboarding:close'); // see ../onboarding.ts
+    initMainWindow().catch(logger.error);
+    getOnboardingWindow()
+      .then(w => w?.destroy())
+      .catch(logger.error);
   },
   getBookmarkDataByLink: async (_, link: string) => {
     if (

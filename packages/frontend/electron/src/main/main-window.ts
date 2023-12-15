@@ -6,7 +6,6 @@ import { join } from 'path';
 
 import { isMacOS, isWindows } from '../shared/utils';
 import { mainWindowOrigin } from './constants';
-import { eventEmitter } from './emitter';
 import { ensureHelperProcess } from './helper-process';
 import { logger } from './logger';
 import { uiSubjects } from './ui/subject';
@@ -237,7 +236,3 @@ export async function getCookie(url?: string, name?: string) {
   });
   return cookies;
 }
-
-eventEmitter.on('window:main:open', () => {
-  initMainWindow().catch(logger.error);
-});
