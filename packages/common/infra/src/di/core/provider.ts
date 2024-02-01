@@ -5,7 +5,7 @@ import {
   RecursionLimitError,
   ServiceNotFoundError,
 } from './error';
-import { parseIdentifier } from './identifier';
+import { createIdentifier, parseIdentifier } from './identifier';
 import {
   type GeneralServiceIdentifier,
   type ServiceIdentifierValue,
@@ -199,6 +199,12 @@ export class BasicServiceProvider extends ServiceProvider {
       scope: scope,
       override: true,
     });
+    if (parent) {
+      this.collection.addValue(SuperServiceProvider, parent, {
+        scope: scope,
+        override: true,
+      });
+    }
   }
 
   getRaw(identifier: ServiceIdentifierValue, options?: ResolveOptions) {
@@ -214,3 +220,10 @@ export class BasicServiceProvider extends ServiceProvider {
     return resolver.getAllRaw(identifier, options);
   }
 }
+
+/**
+ * Built-in service identifier for get parent scope service provider.
+ */
+export const SuperServiceProvider = createIdentifier<ServiceProvider>(
+  'SuperServiceProvider'
+);

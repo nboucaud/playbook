@@ -10,6 +10,7 @@ import {
   ServiceCollection,
   ServiceNotFoundError,
   ServiceProvider,
+  SuperServiceProvider,
 } from '../';
 
 describe('di', () => {
@@ -220,6 +221,7 @@ describe('di', () => {
     }
 
     services.scope(workspaceScope).add(Workspace, [System]);
+
     class Page {
       name = 'page';
       constructor(
@@ -253,6 +255,23 @@ describe('di', () => {
 
     const editor = services.provider(editorScope, page);
     expect(editor.get(Editor).name).toEqual('editor');
+  });
+
+  test('SuperServiceProvider', () => {
+    const services = new ServiceCollection();
+
+    const workspaceScope = createScope('workspace');
+
+    const Env = createIdentifier<string>('Env');
+
+    services.addImpl(Env, 'global').scope(workspaceScope).addImpl(Env, 'local');
+
+    const root = services.provider();
+    expect(root.get(Env)).toEqual('global');
+
+    const workspace = services.provider(workspaceScope, root);
+    expect(workspace.get(Env)).toEqual('local');
+    expect(workspace.get(SuperServiceProvider).get(Env)).toEqual('global');
   });
 
   test('service not found', () => {
