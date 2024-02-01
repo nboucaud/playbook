@@ -5,6 +5,7 @@ export * from './page';
 export * from './service-scope';
 
 import { type ServiceCollection, ServiceProvider } from '../di';
+import { EventBus, EventHandler, ScopeEventService } from '../eventbus';
 import { CleanupService } from '../lifecycle';
 import { Workspace, WorkspaceScope } from '../workspace';
 import { BlockSuitePageContext, PageMetaContext } from './context';
@@ -21,5 +22,10 @@ export function configurePageServices(services: ServiceCollection) {
   services
     .scope(PageScope)
     .add(CleanupService)
+    .addImpl(EventBus, ScopeEventService, [
+      [EventHandler],
+      CleanupService,
+      ServiceProvider,
+    ])
     .add(Page, [PageMetaContext, BlockSuitePageContext, ServiceProvider]);
 }

@@ -386,12 +386,11 @@ class ServiceCollectionEditor {
     Arg1 extends ServiceIdentifier<any>,
     Arg2 extends Type<Trait> | ServiceFactory<Trait> | Trait | null,
     Trait = ServiceIdentifierType<Arg1>,
-    Deps extends Arg2 extends Type<Trait>
+    Arg3 extends Arg2 extends Type<Trait>
       ? TypesToDeps<ConstructorParameters<Arg2>>
       : [] = Arg2 extends Type<Trait>
       ? TypesToDeps<ConstructorParameters<Arg2>>
       : [],
-    Arg3 extends Deps = Deps,
   >(
     identifier: Arg1,
     arg2: Arg2,
@@ -436,7 +435,7 @@ class ServiceCollectionEditor {
 /**
  * Convert dependencies definition to a factory function.
  */
-function dependenciesToFactory(
+export function dependenciesToFactory(
   cls: any,
   deps: any[] = []
 ): ServiceFactory<any> {
