@@ -10,7 +10,7 @@ function getProxy<T extends object>(obj: T) {
   return new Proxy(obj, {});
 }
 
-const useReactiveAdapter = (adapter: WorkspacePropertiesAdapter) => {
+export const useReactiveAdapter = (adapter: WorkspacePropertiesAdapter) => {
   use(adapter.workspace.blockSuiteWorkspace.doc.whenSynced);
   const [proxy, setProxy] = useState(adapter);
   // fixme: this is a hack to force re-render when default meta changed

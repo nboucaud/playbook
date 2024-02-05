@@ -7,7 +7,6 @@ import {
   Scrollable,
   Tooltip,
 } from '@affine/component';
-import { useCurrentWorkspacePropertiesAdapter } from '@affine/core/hooks/use-affine-adapter';
 import { useBlockSuitePageBacklinks } from '@affine/core/hooks/use-block-suite-page-backlinks';
 import type {
   PageInfoCustomProperty,
@@ -25,7 +24,6 @@ import {
   ToggleExpandIcon,
   ViewIcon,
 } from '@blocksuite/icons';
-import type { Page } from '@blocksuite/store';
 import {
   DndContext,
   type DragEndEvent,
@@ -40,6 +38,7 @@ import {
 } from '@dnd-kit/modifiers';
 import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
 import * as Collapsible from '@radix-ui/react-collapsible';
+import { useService } from '@toeverything/infra/di';
 import clsx from 'clsx';
 import { use } from 'foxact/use';
 import { useAtom, useAtomValue } from 'jotai';
@@ -52,14 +51,13 @@ import {
   type PropsWithChildren,
   Suspense,
   useCallback,
-  useContext,
   useMemo,
   useRef,
   useState,
 } from 'react';
 
 import { AffinePageReference } from '../reference-link';
-import { managerContext, pageInfoCollapsedAtom } from './common';
+import { pageInfoCollapsedAtom } from './common';
 import { getDefaultIconName, nameToIcon } from './icons-mapping';
 import {
   type NewPropertyOption,
@@ -79,7 +77,7 @@ const Divider = () => <div className={styles.tableHeaderDivider} />;
 type PropertyVisibility = PageInfoCustomProperty['visibility'];
 
 const SortableProperties = ({ children }: PropsWithChildren) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const properties = manager.getOrderedCustomProperties();
   const readonly = manager.readonly;
   const sensors = useSensors(
@@ -135,7 +133,7 @@ const SortablePropertyRow = ({
         listeners?: SyntheticListenerMap;
       }) => React.ReactNode);
 }) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const {
     setNodeRef,
     attributes,
@@ -217,7 +215,7 @@ const VisibilityModeSelector = ({
 }: {
   property: PageInfoCustomProperty;
 }) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const t = useAFFiNEI18N();
   const meta = manager.getCustomPropertyMeta(property.id);
 
@@ -272,7 +270,7 @@ const VisibilityModeSelector = ({
 export const PagePropertiesSettingsPopup = ({
   children,
 }: PagePropertiesSettingsPopupProps) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const t = useAFFiNEI18N();
   const properties = manager.getOrderedCustomProperties();
 
@@ -326,7 +324,7 @@ export const PageBacklinksPopup = ({
   backlinks,
   children,
 }: PageBacklinksPopupProps) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
 
   return (
     <Menu
@@ -362,7 +360,7 @@ export const PagePropertyRowName = ({
   onFinishEditing,
   children,
 }: PropsWithChildren<PagePropertyRowNameProps>) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const Icon = nameToIcon(meta.icon, meta.type);
   const localPropertyMetaRef = useRef({ ...meta });
   const localPropertyRef = useRef({ ...property });
@@ -472,7 +470,7 @@ export const PagePropertiesTableHeader = ({
   className,
   style,
 }: PagePropertiesTableHeaderProps) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
 
   const t = useAFFiNEI18N();
   const backlinks = useBlockSuitePageBacklinks(
@@ -557,24 +555,13 @@ export const PagePropertiesTableHeader = ({
   );
 };
 
-const usePagePropertiesManager = (page: Page) => {
-  // the workspace properties adapter adapter is reactive,
-  // which means it's reference will change when any of the properties change
-  // also it will trigger a re-render of the component
-  const adapter = useCurrentWorkspacePropertiesAdapter();
-  const manager = useMemo(() => {
-    return new PagePropertiesManager(adapter, page.id);
-  }, [adapter, page.id]);
-  return manager;
-};
-
 interface PagePropertyRowProps {
   property: PageInfoCustomProperty;
   style?: React.CSSProperties;
 }
 
 const PagePropertyRow = ({ property }: PagePropertyRowProps) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const meta = manager.getCustomPropertyMeta(property.id);
 
   assertExists(meta, 'meta should exist for property');
@@ -640,7 +627,7 @@ export const PagePropertiesTableBody = ({
   className,
   style,
 }: PagePropertiesTableBodyProps) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const properties = manager.getOrderedCustomProperties();
   return (
     <Collapsible.Content
@@ -689,7 +676,7 @@ const findNextDefaultName = (name: string, allNames: string[]): string => {
 export const PagePropertiesCreatePropertyMenuItems = ({
   onCreated,
 }: PagePropertiesCreatePropertyMenuItemsProps) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const t = useAFFiNEI18N();
   const onAddProperty = useCallback(
     (e: React.MouseEvent, option: NewPropertyOption & { icon: string }) => {
@@ -750,7 +737,7 @@ interface PagePropertiesAddPropertyMenuItemsProps {
 const PagePropertiesAddPropertyMenuItems = ({
   onCreateClicked,
 }: PagePropertiesAddPropertyMenuItemsProps) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
 
   const t = useAFFiNEI18N();
   const metaList = manager.metaManager.getOrderedCustomPropertiesSchema();
@@ -832,7 +819,7 @@ const PagePropertiesAddPropertyMenuItems = ({
 export const PagePropertiesAddProperty = () => {
   const t = useAFFiNEI18N();
   const [adding, setAdding] = useState(true);
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const toggleAdding: MouseEventHandler = useCallback(e => {
     e.stopPropagation();
     e.preventDefault();
@@ -864,7 +851,7 @@ export const PagePropertiesAddProperty = () => {
 };
 
 const PagePropertiesTableInner = () => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const collapsed = useAtomValue(pageInfoCollapsedAtom);
   use(manager.workspace.blockSuiteWorkspace.doc.whenSynced);
   return (
@@ -879,14 +866,10 @@ const PagePropertiesTableInner = () => {
 
 // this is the main component that renders the page properties table at the top of the page below
 // the page title
-export const PagePropertiesTable = ({ page }: { page: Page }) => {
-  const manager = usePagePropertiesManager(page);
-
+export const PagePropertiesTable = () => {
   return (
-    <managerContext.Provider value={manager}>
-      <Suspense>
-        <PagePropertiesTableInner />
-      </Suspense>
-    </managerContext.Provider>
+    <Suspense>
+      <PagePropertiesTableInner />
+    </Suspense>
   );
 };

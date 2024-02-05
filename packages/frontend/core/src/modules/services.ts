@@ -1,10 +1,13 @@
 import {
   GlobalCache,
+  Page,
+  PageScope,
   type ServiceCollection,
   Workspace,
   WorkspaceScope,
 } from '@toeverything/infra';
 
+import { PagePropertiesManager } from '../components/affine/page-properties';
 import { CollectionService } from './collection';
 import { LocalStorageGlobalCache } from './infra-web/storage';
 import { CurrentPageService } from './page';
@@ -19,7 +22,9 @@ export function configureBusinessServices(services: ServiceCollection) {
     .scope(WorkspaceScope)
     .add(CurrentPageService)
     .add(WorkspacePropertiesAdapter, [Workspace])
-    .add(CollectionService, [Workspace]);
+    .add(CollectionService, [Workspace])
+    .scope(PageScope)
+    .add(PagePropertiesManager, [WorkspacePropertiesAdapter, Page]);
 }
 
 export function configureWebInfraServices(services: ServiceCollection) {

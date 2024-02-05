@@ -19,14 +19,17 @@ import { setup } from '@affine/core/bootstrap/setup';
 import { WorkspaceFlavour } from '@affine/env/workspace';
 import { ServiceCollection } from '@toeverything/infra/di';
 import {
+  PageManager,
   WorkspaceManager,
   configureInfraServices,
   configureTestingInfraServices,
+  initEmptyPage,
 } from '@toeverything/infra';
 import { CurrentWorkspaceService } from '@affine/core/modules/workspace';
 import { configureBusinessServices } from '@affine/core/modules/services';
 import { createStore } from 'jotai';
 import { GlobalScopeProvider } from '@affine/core/modules/infra-web/global-scope';
+import { CurrentPageService } from '@affine/core/modules/page';
 
 setupGlobal();
 export const parameters = {
@@ -136,13 +139,24 @@ provider
   .createWorkspace(WorkspaceFlavour.LOCAL, async w => {
     w.meta.setName('test-workspace');
     w.meta.writeVersion(w);
+    const page = w.createPage({
+      id: 'test-page',
+    });
+    await initEmptyPage(page, 'This is page 1');
+    page
+      .getBlockByFlavour('affine:paragraph')
+      .at(0)
+      ?.text?.insert('Hello World from page 1', 0);
   })
-  .then(workspaceMetadata => {
+  .then(async workspaceMetadata => {
     const currentWorkspace = provider.get(CurrentWorkspaceService);
     const workspaceManager = provider.get(WorkspaceManager);
-    currentWorkspace.openWorkspace(
-      workspaceManager.open(workspaceMetadata).workspace
-    );
+    const workspace = workspaceManager.open(workspaceMetadata).workspace;
+    await workspace.engine.sync.waitForSynced();
+    currentWorkspace.openWorkspace(workspace);
+    const currentPage = workspace.services.get(CurrentPageService);
+    const pageManager = workspace.services.get(PageManager);
+    currentPage.openPage(pageManager.openByPageId('test-page').page);
   });
 
 const withContextDecorator: Decorator = (Story, context) => {

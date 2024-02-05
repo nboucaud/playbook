@@ -6,6 +6,7 @@ import type {
 } from '@affine/core/modules/workspace/properties/schema';
 import { PagePropertyType } from '@affine/core/modules/workspace/properties/schema';
 import { DebugLogger } from '@affine/debug';
+import type { Page } from '@toeverything/infra';
 import { nanoid } from 'nanoid';
 
 import { getDefaultIconName } from './icons-mapping';
@@ -141,9 +142,10 @@ export class PagePropertiesMetaManager {
 
 export class PagePropertiesManager {
   public readonly metaManager: PagePropertiesMetaManager;
+  public readonly pageId = this.page.id;
   constructor(
     private readonly adapter: WorkspacePropertiesAdapter,
-    public readonly pageId: string
+    public readonly page: Page
   ) {
     this.adapter.ensurePageProperties(this.pageId);
     this.metaManager = new PagePropertiesMetaManager(this.adapter);
@@ -151,10 +153,6 @@ export class PagePropertiesManager {
 
   get workspace() {
     return this.adapter.workspace;
-  }
-
-  get page() {
-    return this.adapter.workspace.blockSuiteWorkspace.getPage(this.pageId);
   }
 
   get intrinsicMeta() {
@@ -178,7 +176,7 @@ export class PagePropertiesManager {
   }
 
   get readonly() {
-    return !!this.page?.readonly;
+    return !!this.page.blockSuitePage?.readonly;
   }
 
   addPageTag(pageId: string, tag: TagOption | string) {

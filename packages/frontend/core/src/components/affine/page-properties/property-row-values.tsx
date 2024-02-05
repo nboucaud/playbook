@@ -6,10 +6,11 @@ import type {
 } from '@affine/core/modules/workspace/properties/schema';
 import { timestampToLocalDate } from '@affine/core/utils';
 import { useAFFiNEI18N } from '@affine/i18n/hooks';
+import { useService } from '@toeverything/infra';
 import { noop } from 'lodash-es';
-import { type ChangeEventHandler, useCallback, useContext } from 'react';
+import { type ChangeEventHandler, useCallback } from 'react';
 
-import { managerContext } from './common';
+import { PagePropertiesManager } from './page-properties-manager';
 import * as styles from './styles.css';
 
 interface PropertyRowValueProps {
@@ -21,7 +22,7 @@ export const DateValue = ({ property }: PropertyRowValueProps) => {
   const displayValue = property.value
     ? timestampToLocalDate(property.value)
     : undefined;
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -62,7 +63,7 @@ export const DateValue = ({ property }: PropertyRowValueProps) => {
 };
 
 export const CheckboxValue = ({ property }: PropertyRowValueProps) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -88,7 +89,7 @@ export const CheckboxValue = ({ property }: PropertyRowValueProps) => {
 };
 
 export const TextValue = ({ property, meta }: PropertyRowValueProps) => {
-  const manager = useContext(managerContext);
+  const manager = useService(PagePropertiesManager);
   const handleClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     // todo: show edit popup

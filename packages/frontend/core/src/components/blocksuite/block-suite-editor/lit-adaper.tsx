@@ -109,7 +109,7 @@ export const BlocksuiteDocEditor = forwardRef<
         ) : (
           <BlocksuiteEditorJournalDocTitle page={page} />
         )}
-        <PagePropertiesTable page={page} />
+        <PagePropertiesTable />
         <adapted.DocEditor
           className={styles.docContainer}
           ref={onDocRef}
