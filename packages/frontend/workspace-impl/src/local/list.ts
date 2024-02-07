@@ -4,11 +4,12 @@ import { Workspace as BlockSuiteWorkspace } from '@blocksuite/store';
 import type { WorkspaceListProvider } from '@toeverything/infra';
 import {
   type BlobStorage,
+  LiveData,
   type WorkspaceInfo,
   type WorkspaceMetadata,
 } from '@toeverything/infra';
 import { globalBlockSuiteSchema } from '@toeverything/infra';
-import { difference } from 'lodash-es';
+import type { CleanupService } from '@toeverything/infra/lifecycle';
 import { nanoid } from 'nanoid';
 import { applyUpdate, encodeStateAsUpdate } from 'yjs';
 
@@ -28,10 +29,26 @@ export class LocalWorkspaceListProvider implements WorkspaceListProvider {
     LOCAL_WORKSPACE_CREATED_BROADCAST_CHANNEL_KEY
   );
 
-  async getList() {
+  list = new LiveData(this.getList());
+
+  constructor(cleanUp: CleanupService) {
+    this.notifyChannel.addEventListener('message', () => {
+      this.revalidate();
+    });
+
+    cleanUp.add(() => {
+      this.notifyChannel.close();
+    });
+  }
+
+  private getList(): WorkspaceMetadata[] {
     return JSON.parse(
       localStorage.getItem(LOCAL_WORKSPACE_LOCAL_STORAGE_KEY) ?? '[]'
     ).map((id: string) => ({ id, flavour: WorkspaceFlavour.LOCAL }));
+  }
+
+  private revalidate() {
+    this.list.next(this.getList());
   }
 
   async delete(workspaceId: string) {
@@ -49,6 +66,7 @@ export class LocalWorkspaceListProvider implements WorkspaceListProvider {
 
     // notify all browser tabs, so they can update their workspace list
     this.notifyChannel.postMessage(workspaceId);
+    this.revalidate();
   }
 
   async create(
@@ -93,38 +111,11 @@ export class LocalWorkspaceListProvider implements WorkspaceListProvider {
 
     // notify all browser tabs, so they can update their workspace list
     this.notifyChannel.postMessage(id);
+    this.revalidate();
 
     return { id, flavour: WorkspaceFlavour.LOCAL };
   }
-  subscribe(
-    callback: (changed: {
-      added?: WorkspaceMetadata[] | undefined;
-      deleted?: WorkspaceMetadata[] | undefined;
-    }) => void
-  ): () => void {
-    let lastWorkspaceIDs: string[] = [];
 
-    function scan() {
-      const allWorkspaceIDs: string[] = JSON.parse(
-        localStorage.getItem(LOCAL_WORKSPACE_LOCAL_STORAGE_KEY) ?? '[]'
-      );
-      const added = difference(allWorkspaceIDs, lastWorkspaceIDs);
-      const deleted = difference(lastWorkspaceIDs, allWorkspaceIDs);
-      lastWorkspaceIDs = allWorkspaceIDs;
-      callback({
-        added: added.map(id => ({ id, flavour: WorkspaceFlavour.LOCAL })),
-        deleted: deleted.map(id => ({ id, flavour: WorkspaceFlavour.LOCAL })),
-      });
-    }
-
-    scan();
-
-    // rescan if other tabs notify us
-    this.notifyChannel.addEventListener('message', scan);
-    return () => {
-      this.notifyChannel.removeEventListener('message', scan);
-    };
-  }
   async getInformation(id: string): Promise<WorkspaceInfo | undefined> {
     // get information from root doc
     const storage = environment.isDesktop

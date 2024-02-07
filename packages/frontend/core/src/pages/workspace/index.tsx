@@ -40,8 +40,8 @@ export const Component = (): ReactElement => {
 
   const params = useParams();
 
-  const { workspaceList, loading: listLoading } = useLiveData(
-    useService(WorkspaceListService).status
+  const workspaceList = useLiveData(
+    useService(WorkspaceListService).workspaceList
   );
   const workspaceManager = useService(WorkspaceManager);
 
@@ -95,8 +95,7 @@ export const Component = (): ReactElement => {
     };
   }, [workspace]);
 
-  // if listLoading is false, we can show 404 page, otherwise we should show loading page.
-  if (listLoading === false && meta === undefined) {
+  if (meta === undefined) {
     return <PageNotFound />;
   }
 

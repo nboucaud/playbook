@@ -1,5 +1,11 @@
-import { WorkspaceFactory, WorkspaceListProvider } from '@toeverything/infra';
+import {
+  AuthenticationManager,
+  GlobalCache,
+  WorkspaceFactory,
+  WorkspaceListProvider,
+} from '@toeverything/infra';
 import type { ServiceCollection } from '@toeverything/infra/di';
+import { CleanupService } from '@toeverything/infra/lifecycle';
 
 import { CloudWorkspaceFactory, CloudWorkspaceListProvider } from './cloud';
 import {
@@ -13,9 +19,15 @@ export * from './local';
 
 export function configureWorkspaceImplServices(services: ServiceCollection) {
   services
-    .addImpl(WorkspaceListProvider('affine-cloud'), CloudWorkspaceListProvider)
+    .addImpl(
+      WorkspaceListProvider('affine-cloud'),
+      CloudWorkspaceListProvider,
+      [AuthenticationManager, GlobalCache, CleanupService]
+    )
     .addImpl(WorkspaceFactory('affine-cloud'), CloudWorkspaceFactory)
-    .addImpl(WorkspaceListProvider('local'), LocalWorkspaceListProvider)
+    .addImpl(WorkspaceListProvider('local'), LocalWorkspaceListProvider, [
+      CleanupService,
+    ])
     .addImpl(WorkspaceFactory('local'), LocalWorkspaceFactory);
 }
 

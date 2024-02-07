@@ -1,12 +1,18 @@
 import {
+  AuthenticationProvider,
   GlobalCache,
+  GlobalState,
   type ServiceCollection,
   Workspace,
   WorkspaceScope,
 } from '@toeverything/infra';
 
 import { CollectionService } from './collection';
-import { LocalStorageGlobalCache } from './infra-web/storage';
+import { AffineCloudAuthenticationProvider } from './infra-web/auth';
+import {
+  LocalStorageGlobalCache,
+  LocalStorageGlobalState,
+} from './infra-web/storage';
 import { CurrentPageService } from './page';
 import {
   CurrentWorkspaceService,
@@ -23,5 +29,10 @@ export function configureBusinessServices(services: ServiceCollection) {
 }
 
 export function configureWebInfraServices(services: ServiceCollection) {
-  services.addImpl(GlobalCache, LocalStorageGlobalCache);
+  services
+    .addImpl(GlobalCache, LocalStorageGlobalCache)
+    .addImpl(GlobalState, LocalStorageGlobalState)
+    .addImpl(AuthenticationProvider, AffineCloudAuthenticationProvider, [
+      GlobalState,
+    ]);
 }

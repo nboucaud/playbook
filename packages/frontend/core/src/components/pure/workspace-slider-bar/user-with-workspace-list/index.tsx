@@ -1,15 +1,13 @@
 import { Divider } from '@affine/component/ui/divider';
 import { MenuItem } from '@affine/component/ui/menu';
-import { Unreachable } from '@affine/env/constant';
 import { useAFFiNEI18N } from '@affine/i18n/hooks';
 import { Logo1Icon } from '@blocksuite/icons';
-import { WorkspaceManager } from '@toeverything/infra';
+import { AuthenticationManager, WorkspaceManager } from '@toeverything/infra';
 import { useService } from '@toeverything/infra/di';
 import { useLiveData } from '@toeverything/infra/livedata';
 import { useSetAtom } from 'jotai';
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import {
   authAtom,
@@ -68,9 +66,13 @@ export const UserWithWorkspaceList = ({
 }: {
   onEventEnd?: () => void;
 }) => {
-  const { data: session, status } = useSession();
+  const auth = useService(AuthenticationManager);
+  const session = useLiveData(auth.session('affine-cloud'));
 
-  const isAuthenticated = useMemo(() => status === 'authenticated', [status]);
+  const isAuthenticated = useMemo(
+    () => session?.status === 'authenticated',
+    [session]
+  );
 
   const setOpenCreateWorkspaceModal = useSetAtom(openCreateWorkspaceModalAtom);
 
@@ -87,18 +89,15 @@ export const UserWithWorkspaceList = ({
   const workspaceManager = useService(WorkspaceManager);
   const workspaces = useLiveData(workspaceManager.list.workspaceList);
 
-  // revalidate workspace list when mounted
-  useEffect(() => {
-    workspaceManager.list.revalidate().catch(err => {
-      throw new Unreachable('revlidate should never throw, ' + err);
-    });
-  }, [workspaceManager]);
-
   return (
     <div className={styles.workspaceListWrapper}>
       {isAuthenticated ? (
         <UserAccountItem
-          email={session?.user.email ?? 'Unknown User'}
+          email={
+            (session?.status === 'authenticated'
+              ? session.session.account.email
+              : null) ?? 'Unknown User'
+          }
           onEventEnd={onEventEnd}
         />
       ) : (

@@ -167,7 +167,10 @@ function formatRequestBody<Q extends GraphQLQuery>({
   return body;
 }
 
-export const gqlFetcherFactory = (endpoint: string) => {
+export const gqlFetcherFactory = (
+  endpoint: string,
+  fetcher: (input: string, init?: RequestInit) => Promise<Response> = fetch
+) => {
   const gqlFetch = async <Query extends GraphQLQuery>(
     options: QueryOptions<Query>
   ): Promise<QueryResponse<Query>> => {
@@ -181,14 +184,13 @@ export const gqlFetcherFactory = (endpoint: string) => {
     if (!isFormData) {
       headers['content-type'] = 'application/json';
     }
-    const ret = fetchWithTraceReport(
+    const ret = fetcher(
       endpoint,
       merge(options.context, {
         method: 'POST',
         headers,
         body: isFormData ? body : JSON.stringify(body),
-      }),
-      { event: 'GraphQLRequest' }
+      })
     ).then(async res => {
       if (res.headers.get('content-type')?.startsWith('application/json')) {
         const result = (await res.json()) as ExecutionResult;

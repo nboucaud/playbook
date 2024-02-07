@@ -1,3 +1,4 @@
+import { DebugLogger } from '@affine/debug';
 import { WorkspaceFlavour } from '@affine/env/workspace';
 import {
   createWorkspaceMutation,
@@ -6,58 +7,143 @@ import {
 } from '@affine/graphql';
 import { fetcher } from '@affine/graphql';
 import { Workspace as BlockSuiteWorkspace } from '@blocksuite/store';
-import type { WorkspaceListProvider } from '@toeverything/infra';
+import type {
+  AuthenticationManager,
+  GlobalCache,
+  WorkspaceListProvider,
+} from '@toeverything/infra';
 import {
   type BlobStorage,
+  LiveData,
   type SyncStorage,
   type WorkspaceInfo,
   type WorkspaceMetadata,
 } from '@toeverything/infra';
 import { globalBlockSuiteSchema } from '@toeverything/infra';
-import { difference } from 'lodash-es';
+import type { CleanupService } from '@toeverything/infra/lifecycle';
 import { nanoid } from 'nanoid';
-import { getSession } from 'next-auth/react';
+import {
+  catchError,
+  EMPTY,
+  from,
+  map,
+  mergeWith,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { applyUpdate, encodeStateAsUpdate } from 'yjs';
 
 import { IndexedDBBlobStorage } from '../local/blob-indexeddb';
 import { SQLiteBlobStorage } from '../local/blob-sqlite';
 import { IndexedDBSyncStorage } from '../local/sync-indexeddb';
 import { SQLiteSyncStorage } from '../local/sync-sqlite';
-import { CLOUD_WORKSPACE_CHANGED_BROADCAST_CHANNEL_KEY } from './consts';
 import { AffineStaticSyncStorage } from './sync';
 
-async function getCloudWorkspaceList() {
-  const session = await getSession();
-  if (!session) {
-    return [];
-  }
-  try {
-    const { workspaces } = await fetcher({
-      query: getWorkspacesQuery,
-    });
-    const ids = workspaces.map(({ id }) => id);
-    return ids.map(id => ({
-      id,
-      flavour: WorkspaceFlavour.AFFINE_CLOUD,
-    }));
-  } catch (err) {
-    if (err instanceof Array && err[0]?.message === 'Forbidden resource') {
-      // user not logged in
-      return [];
-    }
-    throw err;
-  }
+const logger = new DebugLogger('affine:cloud-workspace-list');
+
+interface CacheData {
+  userId: string;
+  workspaces: WorkspaceMetadata[];
 }
 
 export class CloudWorkspaceListProvider implements WorkspaceListProvider {
   name = WorkspaceFlavour.AFFINE_CLOUD;
-  notifyChannel = new BroadcastChannel(
-    CLOUD_WORKSPACE_CHANGED_BROADCAST_CHANNEL_KEY
+
+  constructor(
+    private readonly auth: AuthenticationManager,
+    private readonly cache: GlobalCache,
+    cleanUp: CleanupService
+  ) {
+    const subscription = this.affineUser.subscribe(session => {
+      const userId =
+        session?.status === 'authenticated'
+          ? session.session.account.id
+          : undefined;
+      const cached = this.cache.get<CacheData>('affine-cloud-workspaces')
+        ?.userId;
+      if (cached !== userId) {
+        this.revalidate();
+      }
+    });
+
+    cleanUp.add(() => {
+      subscription.unsubscribe();
+    });
+
+    this.revalidate();
+  }
+  isReverifying = new LiveData(false);
+
+  private readonly revalidateRequest$ = new Subject<void>();
+
+  // @ts-expect-error never used
+  private readonly revalidating = this.revalidateRequest$
+    .pipe(mergeWith(this.auth.session('affine-cloud')))
+    .pipe(
+      switchMap(() =>
+        from(this.getList()).pipe(
+          catchError(err => {
+            logger.warn('Failed to revalidate session, ' + err);
+            return EMPTY;
+          })
+        )
+      )
+    )
+    .subscribe(data => {
+      if (data) {
+        this.setList(data.userId, data.workspaces);
+      } else {
+        this.clearList();
+      }
+    });
+
+  affineUser = LiveData.from(this.auth.session('affine-cloud'), undefined);
+
+  list = LiveData.from(
+    this.cache
+      .watch<CacheData>('affine-cloud-workspaces')
+      .pipe(map(x => x?.workspaces ?? [])),
+    []
   );
 
-  getList(): Promise<WorkspaceMetadata[]> {
-    return getCloudWorkspaceList();
+  revalidate(): void {
+    this.revalidateRequest.next();
   }
+
+  private setList(userId: string, workspaces: WorkspaceMetadata[]) {
+    this.cache.set('affine-cloud-workspaces', { userId, workspaces });
+  }
+
+  private clearList() {
+    this.cache.set('affine-cloud-workspaces', null);
+  }
+
+  async getList() {
+    if (this.affineUser.value?.status !== 'authenticated') {
+      return;
+    }
+    const userId = this.affineUser.value.session.account.id;
+    try {
+      const { workspaces } = await fetcher({
+        query: getWorkspacesQuery,
+      });
+      const ids = workspaces.map(({ id }) => id);
+      return {
+        userId,
+        workspaces: ids.map(id => ({
+          id,
+          flavour: WorkspaceFlavour.AFFINE_CLOUD,
+        })),
+      };
+    } catch (err) {
+      if (err instanceof Array && err[0]?.message === 'Forbidden resource') {
+        // user not logged in, tell auth manager to revalidate
+        this.auth.revalidateSession('affine-cloud');
+      }
+      throw err;
+    }
+  }
+
   async delete(workspaceId: string): Promise<void> {
     await fetcher({
       query: deleteWorkspaceMutation,
@@ -65,8 +151,7 @@ export class CloudWorkspaceListProvider implements WorkspaceListProvider {
         id: workspaceId,
       },
     });
-    // notify all browser tabs, so they can update their workspace list
-    this.notifyChannel.postMessage(null);
+    this.revalidate();
   }
   async create(
     initial: (
@@ -106,49 +191,9 @@ export class CloudWorkspaceListProvider implements WorkspaceListProvider {
       await syncStorage.push(subdocs.guid, encodeStateAsUpdate(subdocs));
     }
 
-    // notify all browser tabs, so they can update their workspace list
-    this.notifyChannel.postMessage(null);
+    this.revalidate();
 
     return { id: workspaceId, flavour: WorkspaceFlavour.AFFINE_CLOUD };
-  }
-  subscribe(
-    callback: (changed: {
-      added?: WorkspaceMetadata[] | undefined;
-      deleted?: WorkspaceMetadata[] | undefined;
-    }) => void
-  ): () => void {
-    let lastWorkspaceIDs: string[] = [];
-
-    function scan() {
-      (async () => {
-        const allWorkspaceIDs = (await getCloudWorkspaceList()).map(
-          workspace => workspace.id
-        );
-        const added = difference(allWorkspaceIDs, lastWorkspaceIDs);
-        const deleted = difference(lastWorkspaceIDs, allWorkspaceIDs);
-        lastWorkspaceIDs = allWorkspaceIDs;
-        callback({
-          added: added.map(id => ({
-            id,
-            flavour: WorkspaceFlavour.AFFINE_CLOUD,
-          })),
-          deleted: deleted.map(id => ({
-            id,
-            flavour: WorkspaceFlavour.AFFINE_CLOUD,
-          })),
-        });
-      })().catch(err => {
-        console.error(err);
-      });
-    }
-
-    scan();
-
-    // rescan if other tabs notify us
-    this.notifyChannel.addEventListener('message', scan);
-    return () => {
-      this.notifyChannel.removeEventListener('message', scan);
-    };
   }
   async getInformation(id: string): Promise<WorkspaceInfo | undefined> {
     // get information from both cloud and local storage
@@ -160,7 +205,12 @@ export class CloudWorkspaceListProvider implements WorkspaceListProvider {
       : new IndexedDBSyncStorage(id);
     // download root doc
     const localData = await localStorage.pull(id, new Uint8Array([]));
-    const cloudData = await cloudStorage.pull(id, new Uint8Array([]));
+    let cloudData;
+    try {
+      cloudData = await cloudStorage.pull(id, new Uint8Array([]));
+    } catch (err) {
+      logger.warn('failed to pull from cloud storage', err);
+    }
 
     if (!cloudData && !localData) {
       return;

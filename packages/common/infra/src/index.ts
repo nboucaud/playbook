@@ -1,5 +1,6 @@
 export * from './app-config-storage';
 export * from './atom';
+export * from './auth';
 export * from './blocksuite';
 export * from './command';
 export * from './di';
@@ -9,6 +10,7 @@ export * from './storage';
 export * from './utils';
 export * from './workspace';
 
+import { AuthenticationManager, AuthenticationProvider } from './auth';
 import { type ServiceCollection, ServiceProvider } from './di';
 import { EventBus, EventHandler, GlobalEventService } from './eventbus';
 import { CleanupService } from './lifecycle';
@@ -22,7 +24,8 @@ import {
 export function configureInfraServices(services: ServiceCollection) {
   services
     .add(CleanupService)
-    .addImpl(EventBus, GlobalEventService, [[EventHandler], ServiceProvider]);
+    .addImpl(EventBus, GlobalEventService, [[EventHandler], ServiceProvider])
+    .add(AuthenticationManager, [[AuthenticationProvider]]);
   configureWorkspaceServices(services);
   configurePageServices(services);
 }
