@@ -5,7 +5,7 @@ import { settingRow } from './share.css';
 
 export type SettingRowProps = PropsWithChildren<{
   name: ReactNode;
-  desc: ReactNode;
+  desc?: ReactNode;
   style?: CSSProperties;
   onClick?: () => void;
   spreadCol?: boolean;

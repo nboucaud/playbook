@@ -3,11 +3,13 @@ import {
   AppearanceIcon,
   InformationIcon,
   KeyboardIcon,
+  PenIcon,
 } from '@blocksuite/icons';
 import type { ReactElement, SVGProps } from 'react';
 
 import { useCurrentLoginStatus } from '../../../../hooks/affine/use-current-login-status';
 import { useServerFeatures } from '../../../../hooks/affine/use-server-config';
+import { EditorSettings } from '../../../../modules/editor-settings/view/editor-settings';
 import type { GeneralSettingKey } from '../types';
 import { AboutAffine } from './about';
 import { AppearanceSettings } from './appearance';
@@ -36,6 +38,12 @@ export const useGeneralSettingList = (): GeneralSettingList => {
       title: t['com.affine.settings.appearance'](),
       icon: AppearanceIcon,
       testId: 'appearance-panel-trigger',
+    },
+    {
+      key: 'editor',
+      title: t['com.affine.editorSetting.title'](),
+      icon: PenIcon,
+      testId: 'editor-panel-trigger',
     },
     {
       key: 'shortcuts',
@@ -81,6 +89,8 @@ export const GeneralSetting = ({ generalKey }: GeneralSettingProps) => {
       return <Shortcuts />;
     case 'appearance':
       return <AppearanceSettings />;
+    case 'editor':
+      return <EditorSettings />;
     case 'about':
       return <AboutAffine />;
     case 'plans':

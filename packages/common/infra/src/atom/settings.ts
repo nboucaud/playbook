@@ -33,6 +33,31 @@ export type AppSetting = {
   autoDownloadUpdate: boolean;
   enableMultiView: boolean;
   editorFlags: Partial<Omit<BlockSuiteFlags, 'readonly'>>;
+  codeBlockDefaultLanguage: string;
+  codeBlockWrapCode: boolean;
+  noteBackground: string;
+  noteShadow: string;
+  noteBorderStyle: string;
+  noteBorderThickness: number;
+  noteBorderRadius: number;
+  shapeType: string;
+  shapeStyle: string;
+  shapeFillColor: string;
+  shapeBorderColor: string;
+  shapeBorderStyle: string;
+  shapeBorderThickness: number;
+  textColor: string;
+  textFont: string;
+  textFontSize: number;
+  textFontWeight: number;
+  textAlignment: string;
+  connectorStroke: string;
+  connectorStrokeStyle: string;
+  connectorBorderThickness: number;
+  connectorStyle: boolean;
+  connectorMode: number;
+  penBorderThickness: number;
+  penStroke: string;
 };
 export const windowFrameStyleOptions: AppSetting['windowFrameStyle'][] = [
   'frameless',
@@ -73,6 +98,31 @@ const appSettingBaseAtom = atomWithStorage<AppSetting>('affine-settings', {
   autoDownloadUpdate: true,
   enableMultiView: false,
   editorFlags: {},
+  codeBlockDefaultLanguage: 'Plain Text',
+  codeBlockWrapCode: false,
+  noteBackground: '--affine-tag-yellow',
+  noteShadow: '--affine-note-shadow-box',
+  noteBorderStyle: 'solid',
+  noteBorderThickness: 4,
+  noteBorderRadius: 8,
+  shapeType: 'square',
+  shapeStyle: 'general',
+  shapeFillColor: '--affine-palette-line-yellow',
+  shapeBorderColor: '--affine-palette-line-yellow',
+  shapeBorderStyle: 'solid',
+  shapeBorderThickness: 2,
+  textColor: '--affine-palette-line-orange',
+  textFont: 'blocksuite:surface:Inter',
+  textFontSize: 40,
+  textFontWeight: 400,
+  textAlignment: 'center',
+  connectorStroke: '--affine-palette-line-yellow',
+  connectorStrokeStyle: 'solid',
+  connectorBorderThickness: 6,
+  connectorStyle: false,
+  connectorMode: 0,
+  penBorderThickness: 6,
+  penStroke: '--affine-palette-line-yellow',
 });
 
 export function setupEditorFlags(docCollection: DocCollection) {

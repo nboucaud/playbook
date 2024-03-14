@@ -1,6 +1,7 @@
 export const GeneralSettingKeys = [
   'shortcuts',
   'appearance',
+  'editor',
   'about',
   'plans',
   'billing',

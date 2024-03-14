@@ -5,7 +5,6 @@ import { SettingWrapper } from '@affine/component/setting-components';
 import { useAFFiNEI18N } from '@affine/i18n/hooks';
 import {
   type AppSetting,
-  fontStyleOptions,
   windowFrameStyleOptions,
 } from '@toeverything/infra/atom';
 import { useTheme } from 'next-themes';
@@ -45,53 +44,6 @@ export const ThemeSettings = () => {
   );
 };
 
-const FontFamilySettings = () => {
-  const t = useAFFiNEI18N();
-  const { appSettings, updateSettings } = useAppSettingHelper();
-  return (
-    <RadioButtonGroup
-      width={250}
-      className={settingWrapper}
-      value={appSettings.fontStyle}
-      onValueChange={useCallback(
-        (key: AppSetting['fontStyle']) => {
-          updateSettings('fontStyle', key);
-        },
-        [updateSettings]
-      )}
-    >
-      {fontStyleOptions.map(({ key, value }) => {
-        let font = '';
-        switch (key) {
-          case 'Sans':
-            font = t['com.affine.appearanceSettings.fontStyle.sans']();
-            break;
-          case 'Serif':
-            font = t['com.affine.appearanceSettings.fontStyle.serif']();
-            break;
-          case 'Mono':
-            font = t[`com.affine.appearanceSettings.fontStyle.mono`]();
-            break;
-          default:
-            break;
-        }
-        return (
-          <RadioButton
-            key={key}
-            value={key}
-            data-testid="system-font-style-trigger"
-            style={{
-              fontFamily: value,
-            }}
-          >
-            {font}
-          </RadioButton>
-        );
-      })}
-    </RadioButtonGroup>
-  );
-};
-
 export const AppearanceSettings = () => {
   const t = useAFFiNEI18N();
 
@@ -110,12 +62,6 @@ export const AppearanceSettings = () => {
           desc={t['com.affine.appearanceSettings.color.description']()}
         >
           <ThemeSettings />
-        </SettingRow>
-        <SettingRow
-          name={t['com.affine.appearanceSettings.font.title']()}
-          desc={t['com.affine.appearanceSettings.font.description']()}
-        >
-          <FontFamilySettings />
         </SettingRow>
         <SettingRow
           name={t['com.affine.appearanceSettings.language.title']()}
@@ -138,16 +84,6 @@ export const AppearanceSettings = () => {
           </SettingRow>
         ) : null}
 
-        <SettingRow
-          name={t['com.affine.appearanceSettings.fullWidth.title']()}
-          desc={t['com.affine.appearanceSettings.fullWidth.description']()}
-        >
-          <Switch
-            data-testid="full-width-layout-trigger"
-            checked={appSettings.fullWidthLayout}
-            onChange={checked => updateSettings('fullWidthLayout', checked)}
-          />
-        </SettingRow>
         {runtimeConfig.enableNewSettingUnstableApi && environment.isDesktop ? (
           <SettingRow
             name={t['com.affine.appearanceSettings.windowFrame.title']()}
