@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { ForbiddenException, Logger } from '@nestjs/common';
 import {
   Args,
   Field,
@@ -7,6 +7,7 @@ import {
   Mutation,
   ObjectType,
   Parent,
+  Query,
   registerEnumType,
   ResolveField,
   Resolver,
@@ -158,8 +159,11 @@ export class CopilotResolver {
   })
   async getQuota(
     @Parent() _copilot: CopilotType,
-    @CurrentUser() user: CurrentUser
+    @CurrentUser() user: CurrentUser | undefined
   ) {
+    // TODO(@darkskygit): remove this after the feature is stable
+    if (!user) return { used: 0 };
+
     const quota = await this.quota.getUserQuota(user.id);
     const limit = quota.feature.copilotActionLimit;
 
@@ -182,11 +186,11 @@ export class CopilotResolver {
   })
   async chats(
     @Parent() copilot: CopilotType,
-    @CurrentUser() user: CurrentUser
+    @CurrentUser() user?: CurrentUser
   ) {
     if (!copilot.workspaceId) return [];
-    await this.permissions.checkWorkspace(copilot.workspaceId, user.id);
-    return await this.chatSession.listSessions(user.id, copilot.workspaceId);
+    await this.permissions.checkWorkspace(copilot.workspaceId, user?.id);
+    return await this.chatSession.listSessions(user?.id);
   }
 
   @ResolveField(() => [String], {
@@ -195,11 +199,11 @@ export class CopilotResolver {
   })
   async actions(
     @Parent() copilot: CopilotType,
-    @CurrentUser() user: CurrentUser
+    @CurrentUser() user?: CurrentUser
   ) {
     if (!copilot.workspaceId) return [];
-    await this.permissions.checkWorkspace(copilot.workspaceId, user.id);
-    return await this.chatSession.listSessions(user.id, copilot.workspaceId, {
+    await this.permissions.checkWorkspace(copilot.workspaceId, user?.id);
+    return await this.chatSession.listSessions(user?.id, copilot.workspaceId, {
       action: true,
     });
   }
@@ -207,7 +211,7 @@ export class CopilotResolver {
   @ResolveField(() => [CopilotHistoriesType], {})
   async histories(
     @Parent() copilot: CopilotType,
-    @CurrentUser() user: CurrentUser,
+    @CurrentUser() user?: CurrentUser,
     @Args('docId', { nullable: true }) docId?: string,
     @Args({
       name: 'options',
@@ -217,16 +221,23 @@ export class CopilotResolver {
     options?: QueryChatHistoriesInput
   ) {
     const workspaceId = copilot.workspaceId;
-    if (!workspaceId) {
-      return [];
-    } else if (docId) {
-      await this.permissions.checkPagePermission(workspaceId, docId, user.id);
-    } else {
-      await this.permissions.checkWorkspace(workspaceId, user.id);
+    // todo(@darkskygit): remove this after the feature is stable
+    const publishable = AFFiNE.featureFlags.copilotAuthorization;
+    if (user) {
+      if (!workspaceId) {
+        return [];
+      }
+      if (docId) {
+        await this.permissions.checkPagePermission(workspaceId, docId, user.id);
+      } else {
+        await this.permissions.checkWorkspace(workspaceId, user.id);
+      }
+    } else if (!publishable) {
+      return new ForbiddenException('Login required');
     }
 
     return await this.chatSession.listHistories(
-      user.id,
+      user?.id,
       workspaceId,
       docId,
       options
@@ -238,34 +249,37 @@ export class CopilotResolver {
     description: 'Create a chat session',
   })
   async createCopilotSession(
-    @CurrentUser() user: CurrentUser,
+    @CurrentUser() user: CurrentUser | undefined,
     @Args({ name: 'options', type: () => CreateChatSessionInput })
     options: CreateChatSessionInput
   ) {
-    await this.permissions.checkPagePermission(
-      options.workspaceId,
-      options.docId,
-      user.id
-    );
-    const lockFlag = `${COPILOT_LOCKER}:session:${user.id}:${options.workspaceId}`;
+    // todo(@darkskygit): remove this after the feature is stable
+    const publishable = AFFiNE.featureFlags.copilotAuthorization;
+    if (!user && !publishable) {
+      return new ForbiddenException('Login required');
+    }
+
+    const lockFlag = `${COPILOT_LOCKER}:session:${user?.id}:${options.workspaceId}`;
     await using lock = await this.mutex.lock(lockFlag);
     if (!lock) {
       return new TooManyRequestsException('Server is busy');
     }
-
-    const { limit, used } = await this.getQuota(
-      { workspaceId: undefined },
-      user
-    );
-    if (limit && Number.isFinite(limit) && used >= limit) {
-      return new PaymentRequiredException(
-        `You have reached the limit of actions in this workspace, please upgrade your plan.`
+    if (options.action && user) {
+      const { limit, used } = await this.getQuota(
+        { workspaceId: undefined },
+        user
       );
+      if (limit && Number.isFinite(limit) && used >= limit) {
+        return new PaymentRequiredException(
+          `You have reached the limit of actions in this workspace, please upgrade your plan.`
+        );
+      }
     }
 
     const session = await this.chatSession.create({
       ...options,
-      userId: user.id,
+      // todo: force user to be logged in
+      userId: user?.id ?? '',
     });
     return session;
   }
@@ -310,6 +324,13 @@ export class UserCopilotResolver {
     if (workspaceId) {
       await this.permissions.checkWorkspace(workspaceId, user.id);
     }
+    return { workspaceId };
+  }
+
+  @Public()
+  @Query(() => CopilotType)
+  async copilotAnonymous(@Args('workspaceId') workspaceId: string) {
+    if (!AFFiNE.featureFlags.copilotAuthorization) return;
     return { workspaceId };
   }
 }

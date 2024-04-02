@@ -111,6 +111,8 @@ export class ChatSession implements AsyncDisposable {
 @Injectable()
 export class ChatSessionService {
   private readonly logger = new Logger(ChatSessionService.name);
+  // NOTE: only used for anonymous session in development
+  private readonly unsavedSessions = new Map<string, ChatSessionState>();
 
   constructor(
     private readonly db: PrismaClient,
@@ -119,10 +121,15 @@ export class ChatSessionService {
   ) {}
 
   private async setSession(state: ChatSessionState): Promise<void> {
+    if (!state.userId && AFFiNE.featureFlags.copilotAuthorization) {
+      // todo(@darkskygit): allow anonymous session in development
+      // remove this after the feature is stable
+      this.unsavedSessions.set(state.sessionId, state);
+      return;
+    }
     await this.db.aiSession.upsert({
       where: {
         id: state.sessionId,
-        userId: state.userId,
       },
       update: {
         messages: {
@@ -182,8 +189,15 @@ export class ChatSessionService {
         },
       })
       .then(async session => {
-        if (!session) return;
-
+        if (!session) {
+          const publishable = AFFiNE.featureFlags.copilotAuthorization;
+          if (publishable) {
+            // todo(@darkskygit): allow anonymous session in development
+            // remove this after the feature is stable
+            return this.unsavedSessions.get(sessionId);
+          }
+          return;
+        }
         const messages = ChatMessageSchema.array().safeParse(session.messages);
 
         return {
@@ -208,16 +222,25 @@ export class ChatSessionService {
   }
 
   async countUserActions(userId: string): Promise<number> {
+    // NOTE: only used for anonymous session in development
+    if (!userId && AFFiNE.featureFlags.copilotAuthorization) {
+      return this.unsavedSessions.size;
+    }
     return await this.db.aiSession.count({
       where: { userId, prompt: { action: { not: null } } },
     });
   }
 
   async listSessions(
-    userId: string,
-    workspaceId: string,
+    userId: string | undefined,
+    workspaceId?: string,
     options?: { docId?: string; action?: boolean }
   ): Promise<string[]> {
+    // NOTE: only used for anonymous session in development
+    if (!userId && AFFiNE.featureFlags.copilotAuthorization) {
+      return Array.from(this.unsavedSessions.keys());
+    }
+
     return await this.db.aiSession
       .findMany({
         where: {
@@ -234,11 +257,34 @@ export class ChatSessionService {
   }
 
   async listHistories(
-    userId: string,
+    userId: string | undefined,
     workspaceId?: string,
     docId?: string,
     options?: ListHistoriesOptions
   ): Promise<ChatHistory[]> {
+    // NOTE: only used for anonymous session in development
+    if (!userId && AFFiNE.featureFlags.copilotAuthorization) {
+      return [...this.unsavedSessions.values()]
+        .map(state => {
+          const ret = ChatMessageSchema.array().safeParse(state.messages);
+          if (ret.success) {
+            const tokens = this.calculateTokenSize(
+              state.messages,
+              state.prompt.model as AvailableModel
+            );
+            return {
+              sessionId: state.sessionId,
+              action: state.prompt.action,
+              tokens,
+              messages: ret.data,
+            };
+          }
+          console.error('Unexpected error in listHistories', ret.error);
+          return undefined;
+        })
+        .filter((v): v is NonNullable<typeof v> => !!v);
+    }
+
     return await this.db.aiSession
       .findMany({
         where: {
