@@ -36,10 +36,8 @@ export interface Scalars {
 
 export interface CreateChatSessionInput {
   /** An mark identifying which view to use to display the session */
-  action: InputMaybe<Scalars['Boolean']['input']>;
+  action: InputMaybe<Scalars['String']['input']>;
   docId: Scalars['String']['input'];
-  /** The model to use for the session */
-  model: Scalars['String']['input'];
   /** The prompt name to use for the session */
   promptName: Scalars['String']['input'];
   workspaceId: Scalars['String']['input'];
