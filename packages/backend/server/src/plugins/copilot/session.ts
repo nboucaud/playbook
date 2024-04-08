@@ -126,18 +126,11 @@ export class ChatSessionService {
       },
       create: {
         id: state.sessionId,
+        workspaceId: state.workspaceId,
+        docId: state.docId,
         messages: { create: state.messages },
         // connect
         user: { connect: { id: state.userId } },
-        workspace: { connect: { id: state.workspaceId } },
-        doc: {
-          connect: {
-            id_workspaceId: {
-              id: state.docId,
-              workspaceId: state.workspaceId,
-            },
-          },
-        },
         prompt: { connect: { name: state.prompt.name } },
       },
     });

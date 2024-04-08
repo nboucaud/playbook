@@ -23,7 +23,6 @@ import {
 } from '../../fundamentals';
 import { ChatSessionService, ListHistoriesOptions } from './session';
 import {
-  type AvailableModel,
   AvailableModels,
   type ChatHistory,
   type ChatMessage,
@@ -46,11 +45,6 @@ class CreateChatSessionInput {
     nullable: true,
   })
   action!: string | undefined;
-
-  @Field(() => String, {
-    description: 'The model to use for the session',
-  })
-  model!: AvailableModel;
 
   @Field(() => String, {
     description: 'The prompt name to use for the session',
@@ -272,6 +266,7 @@ export class UserCopilotResolver {
     @Args('workspaceId') workspaceId: string
   ) {
     await this.permissions.checkWorkspace(workspaceId, user.id);
+    console.log('copilot', user, workspaceId);
     return { workspaceId };
   }
 }
