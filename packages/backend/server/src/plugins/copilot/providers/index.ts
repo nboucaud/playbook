@@ -134,4 +134,5 @@ export class ProviderService {
   }
 }
 
+export { FalProvider } from './fal';
 export { OpenAIProvider } from './openai';

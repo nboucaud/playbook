@@ -7,6 +7,7 @@ import { ChatMessageCache } from './message';
 import { PromptService } from './prompt';
 import {
   assertProvidersConfigs,
+  FalProvider,
   OpenAIProvider,
   ProviderService,
   registerCopilotProvider,
@@ -14,6 +15,7 @@ import {
 import { CopilotResolver, UserCopilotResolver } from './resolver';
 import { ChatSessionService } from './session';
 
+registerCopilotProvider(FalProvider);
 registerCopilotProvider(OpenAIProvider);
 
 @Plugin({
