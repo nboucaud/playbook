@@ -283,8 +283,8 @@ export const getCopilotQuotaQuery = {
   query: `
 query getCopilotQuota($workspaceId: String!, $docId: String!) {
   currentUser {
-    copilot(workspaceId: $workspaceId) {
-      quota(docId: $docId) {
+    copilot {
+      quota {
         limit
         used
       }

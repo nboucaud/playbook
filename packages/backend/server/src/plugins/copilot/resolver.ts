@@ -22,11 +22,7 @@ import {
   TooManyRequestsException,
 } from '../../fundamentals';
 import { ChatSessionService, ListHistoriesOptions } from './session';
-import {
-  AvailableModels,
-  type ChatHistory,
-  type ChatMessage,
-} from './types';
+import { AvailableModels, type ChatHistory, type ChatMessage } from './types';
 
 registerEnumType(AvailableModels, { name: 'CopilotModel' });
 
@@ -116,8 +112,8 @@ class CopilotQuotaType {
 
 @ObjectType('Copilot')
 export class CopilotType {
-  @Field(() => ID)
-  workspaceId!: string;
+  @Field(() => ID, { nullable: true })
+  workspaceId!: string | undefined;
 }
 
 @Resolver(() => CopilotType)
@@ -135,25 +131,15 @@ export class CopilotResolver {
     complexity: 2,
   })
   async getQuota(
-    @Parent() copilot: CopilotType,
-    @CurrentUser() user: CurrentUser,
-    @Args('docId') docId: string
+    @Parent() _copilot: CopilotType,
+    @CurrentUser() user: CurrentUser
   ) {
-    await this.permissions.checkWorkspace(copilot.workspaceId, user.id);
-
     const quota = await this.quota.getUserQuota(user.id);
     const limit = quota.feature.copilotActionLimit;
 
-    const actions = await this.chatSession.countSessions(
-      user.id,
-      copilot.workspaceId,
-      {
-        docId,
-        action: true,
-      }
-    );
+    const actions = await this.chatSession.countUserActions(user.id);
     const chats = await this.chatSession
-      .listHistories(user.id, copilot.workspaceId, docId)
+      .listHistories(user.id)
       .then(histories =>
         histories.reduce(
           (acc, h) => acc + h.messages.filter(m => m.role === 'user').length,
@@ -172,6 +158,7 @@ export class CopilotResolver {
     @Parent() copilot: CopilotType,
     @CurrentUser() user: CurrentUser
   ) {
+    if (!copilot.workspaceId) return [];
     await this.permissions.checkWorkspace(copilot.workspaceId, user.id);
     return await this.chatSession.listSessions(user.id, copilot.workspaceId);
   }
@@ -184,6 +171,7 @@ export class CopilotResolver {
     @Parent() copilot: CopilotType,
     @CurrentUser() user: CurrentUser
   ) {
+    if (!copilot.workspaceId) return [];
     await this.permissions.checkWorkspace(copilot.workspaceId, user.id);
     return await this.chatSession.listSessions(user.id, copilot.workspaceId, {
       action: true,
@@ -203,7 +191,9 @@ export class CopilotResolver {
     options?: QueryChatHistoriesInput
   ) {
     const workspaceId = copilot.workspaceId;
-    if (docId) {
+    if (!workspaceId) {
+      return [];
+    } else if (docId) {
       await this.permissions.checkPagePermission(workspaceId, docId, user.id);
     } else {
       await this.permissions.checkWorkspace(workspaceId, user.id);
@@ -238,9 +228,8 @@ export class CopilotResolver {
     }
 
     const { limit, used } = await this.getQuota(
-      { workspaceId: options.workspaceId },
-      user,
-      options.docId
+      { workspaceId: undefined },
+      user
     );
     if (limit && Number.isFinite(limit) && used >= limit) {
       return new PaymentRequiredException(
@@ -263,10 +252,11 @@ export class UserCopilotResolver {
   @ResolveField(() => CopilotType)
   async copilot(
     @CurrentUser() user: CurrentUser,
-    @Args('workspaceId') workspaceId: string
+    @Args('workspaceId', { nullable: true }) workspaceId?: string
   ) {
-    await this.permissions.checkWorkspace(workspaceId, user.id);
-    console.log('copilot', user, workspaceId);
+    if (workspaceId) {
+      await this.permissions.checkWorkspace(workspaceId, user.id);
+    }
     return { workspaceId };
   }
 }

@@ -121,14 +121,22 @@ export class ChatSessionService {
         messages: {
           // delete old messages
           deleteMany: {},
-          create: state.messages,
+          create: state.messages.map(m => ({
+            ...m,
+            params: m.params || undefined,
+          })),
         },
       },
       create: {
         id: state.sessionId,
         workspaceId: state.workspaceId,
         docId: state.docId,
-        messages: { create: state.messages },
+        messages: {
+          create: state.messages.map(m => ({
+            ...m,
+            params: m.params || undefined,
+          })),
+        },
         // connect
         user: { connect: { id: state.userId } },
         prompt: { connect: { name: state.prompt.name } },
@@ -192,20 +200,9 @@ export class ChatSessionService {
       .reduce((total, length) => total + length, 0);
   }
 
-  async countSessions(
-    userId: string,
-    workspaceId: string,
-    options?: { docId?: string; action?: boolean }
-  ): Promise<number> {
+  async countUserActions(userId: string): Promise<number> {
     return await this.db.aiSession.count({
-      where: {
-        userId,
-        workspaceId,
-        docId: workspaceId === options?.docId ? undefined : options?.docId,
-        prompt: {
-          action: options?.action ? { not: null } : { equals: null },
-        },
-      },
+      where: { userId, prompt: { action: { not: null } } },
     });
   }
 
@@ -231,7 +228,7 @@ export class ChatSessionService {
 
   async listHistories(
     userId: string,
-    workspaceId: string,
+    workspaceId?: string,
     docId?: string,
     options?: ListHistoriesOptions
   ): Promise<ChatHistory[]> {

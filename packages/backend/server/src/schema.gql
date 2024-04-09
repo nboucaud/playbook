@@ -18,8 +18,8 @@ type Copilot {
   histories(docId: String, options: QueryChatHistoriesInput): [CopilotHistories!]!
 
   """Get the quota of the user in the workspace"""
-  quota(docId: String!): CopilotQuota!
-  workspaceId: ID!
+  quota: CopilotQuota!
+  workspaceId: ID
 }
 
 type CopilotHistories {
@@ -435,7 +435,7 @@ type UserSubscription {
 type UserType {
   """User avatar url"""
   avatarUrl: String
-  copilot(workspaceId: String!): Copilot!
+  copilot(workspaceId: String): Copilot!
 
   """User email verified"""
   createdAt: DateTime @deprecated(reason: "useless")
