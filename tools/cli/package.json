@@ -2,6 +2,9 @@
   "name": "@affine/cli",
   "type": "module",
   "private": true,
+  "exports": {
+    "./runtime-config": "./src/webpack/runtime-config.mjs"
+  },
   "devDependencies": {
     "@affine/env": "workspace:*",
     "@affine/templates": "workspace:*",

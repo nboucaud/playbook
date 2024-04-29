@@ -1,10 +1,16 @@
-import type { RuntimeConfig } from '@affine/env/global';
+// @ts-check
 
 import packageJson from '../../package.json' assert { type: 'json' };
-import type { BuildFlags } from '../config';
 
-export function getRuntimeConfig(buildFlags: BuildFlags): RuntimeConfig {
-  const buildPreset: Record<BuildFlags['channel'], RuntimeConfig> = {
+/**
+ * @param {import('../config').BuildFlags} buildFlags
+ * @returns {import('@affine/env/global').RuntimeConfig}
+ */
+export function getRuntimeConfig(buildFlags) {
+  /**
+   * @type {Record<import('../config').BuildFlags['channel'], import('@affine/env/global').RuntimeConfig>}
+   */
+  const buildPreset = {
     stable: {
       enableTestProperties: false,
       enableBroadcastChannelProvider: true,
@@ -33,14 +39,20 @@ export function getRuntimeConfig(buildFlags: BuildFlags): RuntimeConfig {
         ...this.stable,
         enablePageHistory: true,
         serverUrlPrefix: 'https://insider.affine.pro',
-        appBuildType: 'beta' as const,
+        /**
+         * @type {'beta'}
+         */
+        appBuildType: 'beta',
       };
     },
     get internal() {
       return {
         ...this.stable,
         serverUrlPrefix: 'https://insider.affine.pro',
-        appBuildType: 'internal' as const,
+        /**
+         * @type {'internal'}
+         */
+        appBuildType: 'internal',
       };
     },
     // canary will be aggressive and enable all features

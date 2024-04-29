@@ -47,7 +47,12 @@
     // Completeness
     "skipLibCheck": true, // skip all type checks for .d.ts files
     "paths": {
-      "@affine/core/*": ["./packages/frontend/core/src/*"],
+      "@affine/core/*": [
+        "./packages/frontend/core/src/*.ts",
+        "./packages/frontend/core/src/*.tsx",
+        "./packages/frontend/core/src/*/index.ts",
+        "./packages/frontend/core/src/*/index.tsx"
+      ],
       "@affine/core": ["./packages/frontend/core/src/index.ts"],
       "@affine/cli/*": ["./tools/cli/src/*"],
       "@affine/server/*": ["./packages/backend/server/src/*"],
@@ -79,6 +84,9 @@
     // Backend
     {
       "path": "./packages/backend/server"
+    },
+    {
+      "path": "./packages/backend/ssr"
     },
     {
       "path": "./packages/backend/server/tests"

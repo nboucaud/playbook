@@ -4,6 +4,7 @@
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "Node",
+    "allowJs": true,
     "outDir": "lib"
   },
   "include": ["src", "package.json"],

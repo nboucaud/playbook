@@ -1,0 +1,16 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "lib",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "types": ["affine__env"],
+    "rootDir": "./src"
+  },
+  "include": ["./src"],
+  "references": [
+    { "path": "../../frontend/core" },
+    { "path": "../../frontend/component" }
+  ]
+}

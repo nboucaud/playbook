@@ -3,12 +3,6 @@
   "type": "module",
   "private": true,
   "version": "0.14.0",
-  "exports": {
-    "./app": "./src/app.tsx",
-    "./router": "./src/router.tsx",
-    "./bootstrap/register-plugins": "./src/bootstrap/register-plugins.ts",
-    "./*": "./src/*"
-  },
   "dependencies": {
     "@affine-test/fixtures": "workspace:*",
     "@affine/component": "workspace:*",

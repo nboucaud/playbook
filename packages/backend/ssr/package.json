@@ -1,0 +1,30 @@
+{
+  "name": "@affine/ssr",
+  "private": true,
+  "version": "0.14.0",
+  "description": "AFFiNE SSR Server",
+  "type": "module",
+  "dependencies": {
+    "@affine/component": "workspace:*",
+    "@affine/core": "workspace:*",
+    "@emotion/react": "^11.11.4",
+    "@nestjs/common": "^10.3.7",
+    "@nestjs/core": "^10.3.7",
+    "@nestjs/platform-express": "^10.3.7",
+    "@toeverything/infra": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.23.0",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10"
+  },
+  "scripts": {
+    "start": "node --loader ts-node/esm/transpile-only.mjs ./src/index.ts",
+    "dev": "vite"
+  }
+}
