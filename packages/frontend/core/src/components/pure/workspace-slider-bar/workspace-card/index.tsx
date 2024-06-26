@@ -18,6 +18,7 @@ import {
 } from '@blocksuite/icons/rc';
 import { useLiveData, useService, WorkspaceService } from '@toeverything/infra';
 import { cssVar } from '@toeverything/theme';
+import clsx from 'clsx';
 import { useSetAtom } from 'jotai';
 import { debounce } from 'lodash-es';
 import type { HTMLAttributes } from 'react';
@@ -291,13 +292,13 @@ export const WorkspaceCard = forwardRef<
 
   return (
     <div
-      className={styles.container}
       role="button"
       tabIndex={0}
       data-testid="current-workspace"
       id="current-workspace"
       ref={ref}
       {...props}
+      className={clsx(styles.container, props.className)}
     >
       <WorkspaceAvatar
         key={currentWorkspace.id}

@@ -12,7 +12,7 @@ export interface WorkspaceListProps {
   currentWorkspaceId?: string | null;
   items: WorkspaceMetadata[];
   openingId?: string | null;
-  onClick: (workspace: WorkspaceMetadata) => void;
+  onClick: (workspace: WorkspaceMetadata, e: React.MouseEvent) => void;
   onSettingClick: (workspace: WorkspaceMetadata) => void;
   onEnableCloudClick?: (meta: WorkspaceMetadata) => void;
   useIsWorkspaceOwner: (

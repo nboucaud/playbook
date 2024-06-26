@@ -8,7 +8,11 @@ import { mixpanel } from '../../utils';
 import { UserWithWorkspaceList } from '../pure/workspace-slider-bar/user-with-workspace-list';
 import { WorkspaceCard } from '../pure/workspace-slider-bar/workspace-card';
 
-export const WorkspaceSelector = () => {
+export const WorkspaceSelector = ({
+  workspaceCardClassName,
+}: {
+  workspaceCardClassName?: string;
+}) => {
   const [isUserWorkspaceListOpened, setOpenUserWorkspaceList] = useAtom(
     openWorkspaceListModalAtom
   );
@@ -47,7 +51,10 @@ export const WorkspaceSelector = () => {
         },
       }}
     >
-      <WorkspaceCard onClick={openUserWorkspaceList} />
+      <WorkspaceCard
+        className={workspaceCardClassName}
+        onClick={openUserWorkspaceList}
+      />
     </Menu>
   );
 };

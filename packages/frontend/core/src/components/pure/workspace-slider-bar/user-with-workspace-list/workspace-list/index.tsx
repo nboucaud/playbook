@@ -39,7 +39,10 @@ interface WorkspaceModalProps {
   workspaces: WorkspaceMetadata[];
   currentWorkspaceId?: string | null;
   openingId?: string | null;
-  onClickWorkspace: (workspaceMetadata: WorkspaceMetadata) => void;
+  onClickWorkspace: (
+    workspaceMetadata: WorkspaceMetadata,
+    e: React.MouseEvent
+  ) => void;
   onClickWorkspaceSetting: (workspaceMetadata: WorkspaceMetadata) => void;
   onClickEnableCloud?: (meta: WorkspaceMetadata) => void;
   onNewWorkspace: () => void;
@@ -182,8 +185,11 @@ export const AFFiNEWorkspaceList = ({
   );
 
   const onClickWorkspace = useCallback(
-    (workspaceMetadata: WorkspaceMetadata) => {
+    (workspaceMetadata: WorkspaceMetadata, e: React.MouseEvent) => {
       if (document.startViewTransition) {
+        if (e.currentTarget instanceof HTMLElement) {
+          e.currentTarget.style['viewTransitionName' as any] = 'workspace-card';
+        }
         document.startViewTransition(() => {
           jumpToSubPath(workspaceMetadata.id, WorkspaceSubPath.ALL);
           onEventEnd?.();

@@ -19,7 +19,7 @@ export interface WorkspaceTypeProps {
 export interface WorkspaceCardProps {
   currentWorkspaceId?: string | null;
   meta: WorkspaceMetadata;
-  onClick: (metadata: WorkspaceMetadata) => void;
+  onClick: (metadata: WorkspaceMetadata, e: React.MouseEvent) => void;
   onSettingClick: (metadata: WorkspaceMetadata) => void;
   onEnableCloudClick?: (meta: WorkspaceMetadata) => void;
   isOwner?: boolean;
@@ -73,9 +73,12 @@ export const WorkspaceCard = ({
       className={styles.card}
       data-active={meta.id === currentWorkspaceId}
       data-testid="workspace-card"
-      onClick={useCallback(() => {
-        onClick(meta);
-      }, [onClick, meta])}
+      onClick={useCallback(
+        (e: React.MouseEvent) => {
+          onClick(meta, e);
+        },
+        [onClick, meta]
+      )}
     >
       <WorkspaceAvatar
         key={meta.id}

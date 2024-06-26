@@ -1,5 +1,5 @@
 import { cssVar } from '@toeverything/theme';
-import { createVar, globalStyle, style } from '@vanilla-extract/css';
+import { createVar, globalStyle, keyframes, style } from '@vanilla-extract/css';
 
 export const progressColorVar = createVar();
 
@@ -13,6 +13,63 @@ export const workspaceAndUserWrapper = style({
 export const workspaceWrapper = style({
   width: 0,
   flex: 1,
+});
+
+export const workspaceCardViewTransition = style({
+  selectors: {
+    '&:not([data-state="open"])': {
+      viewTransitionName: 'workspace-card',
+    },
+  },
+});
+
+const circleClip = keyframes({
+  '0%': {
+    clipPath: 'circle(10% at 100px 70px)',
+    opacity: 0,
+  },
+  '30%': {
+    opacity: 1,
+  },
+  '100%': {
+    clipPath: 'circle(150% at 100px 70px)',
+  },
+});
+
+const darker = keyframes({
+  '0%': {
+    filter: 'brightness(1)',
+  },
+  '100%': {
+    filter: 'brightness(0.5)',
+  },
+});
+
+globalStyle(`::view-transition-new(root),::view-transition-old(root)`, {
+  animationDuration: '1000ms',
+  animationTimingFunction: 'ease-in',
+});
+
+globalStyle(
+  `::view-transition-new(workspace-card),::view-transition-old(workspace-card)`,
+  {
+    height: '100%',
+    animationDuration: '500ms',
+    animationTimingFunction: 'ease-in',
+  }
+);
+
+globalStyle('::view-transition-old(workspace-card)', {
+  width: '284px',
+});
+
+globalStyle('::view-transition-old(root)', {
+  animationName: darker,
+});
+
+globalStyle('::view-transition-new(root)', {
+  animationName: circleClip,
+  background: cssVar('backgroundPrimaryColor'),
 });
 
 export const userInfoWrapper = style({

@@ -36,7 +36,11 @@ import { AddCollectionButton } from '../pure/workspace-slider-bar/collections/ad
 import FavoriteList from '../pure/workspace-slider-bar/favorite/favorite-list';
 import { WorkspaceSelector } from '../workspace-selector';
 import ImportPage from './import-page';
-import { workspaceAndUserWrapper, workspaceWrapper } from './index.css';
+import {
+  workspaceAndUserWrapper,
+  workspaceCardViewTransition,
+  workspaceWrapper,
+} from './index.css';
 import { AppSidebarJournalButton } from './journal-button';
 import { UpdaterButton } from './updater-button';
 import { UserInfo } from './user-info';
@@ -169,7 +173,9 @@ export const RootAppSidebar = memo(
         <SidebarContainer>
           <div className={workspaceAndUserWrapper}>
             <div className={workspaceWrapper}>
-              <WorkspaceSelector />
+              <WorkspaceSelector
+                workspaceCardClassName={workspaceCardViewTransition}
+              />
             </div>
             <UserInfo />
           </div>
