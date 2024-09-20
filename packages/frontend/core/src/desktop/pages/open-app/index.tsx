@@ -57,6 +57,11 @@ interface LoaderData {
   currentUser?: GetCurrentUserQuery['currentUser'];
 }
 
+/**
+ * /open-app/:action page
+ *
+ * only for web
+ */
 const OpenAppImpl = ({ urlToOpen, channel }: OpenAppProps) => {
   const t = useI18n();
   const openDownloadLink = useCallback(() => {

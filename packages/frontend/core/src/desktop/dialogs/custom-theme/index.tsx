@@ -1,3 +1,4 @@
+import { ThemeEditorService } from '@affine/core/modules/theme-editor';
 import {
   FeatureFlagService,
   useLiveData,
@@ -6,11 +7,9 @@ import {
 import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 
-import { ThemeEditorService } from '../services/theme-editor';
-
 let _provided = false;
 
-export const useCustomTheme = (target: HTMLElement) => {
+export const CustomThemeModifier = () => {
   const { themeEditorService, featureFlagService } = useServices({
     ThemeEditorService,
     FeatureFlagService,
@@ -34,12 +33,12 @@ export const useCustomTheme = (target: HTMLElement) => {
 
       // remove previous style
       // TOOD(@CatsJuice): find better way to remove previous style
-      target.style.cssText = '';
+      document.documentElement.style.cssText = '';
       // recover color scheme set by next-themes
-      target.style.colorScheme = mode;
+      document.documentElement.style.colorScheme = mode;
 
       Object.entries(valueMap).forEach(([key, value]) => {
-        value && target.style.setProperty(key, value);
+        value && document.documentElement.style.setProperty(key, value);
       });
     });
 
@@ -47,11 +46,7 @@ export const useCustomTheme = (target: HTMLElement) => {
       _provided = false;
       sub.unsubscribe();
     };
-  }, [resolvedTheme, target.style, enableThemeEditor, themeEditorService]);
-};
-
-export const CustomThemeModifier = () => {
-  useCustomTheme(document.documentElement);
+  }, [resolvedTheme, enableThemeEditor, themeEditorService]);
 
   return null;
 };

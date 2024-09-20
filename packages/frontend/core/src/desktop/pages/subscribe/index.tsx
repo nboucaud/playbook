@@ -7,14 +7,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { EMPTY, mergeMap, switchMap } from 'rxjs';
 
-import { generateSubscriptionCallbackLink } from '../../components/hooks/affine/use-subscription-notify';
+import { generateSubscriptionCallbackLink } from '../../../components/hooks/affine/use-subscription-notify';
 import {
   RouteLogic,
   useNavigateHelper,
-} from '../../components/hooks/use-navigate-helper';
-import { AuthService, SubscriptionService } from '../../modules/cloud';
+} from '../../../components/hooks/use-navigate-helper';
+import { AuthService, SubscriptionService } from '../../../modules/cloud';
 import { container } from './subscribe.css';
 
+/**
+ * /subscribe page
+ */
 export const Component = () => {
   const { authService, subscriptionService } = useServices({
     AuthService,

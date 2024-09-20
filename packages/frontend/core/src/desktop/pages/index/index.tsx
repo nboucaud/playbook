@@ -1,3 +1,7 @@
+import {
+  buildShowcaseWorkspace,
+  createFirstAppData,
+} from '@affine/core/utils/first-app-data';
 import { apis } from '@affine/electron-api';
 import { WorkspaceFlavour } from '@affine/env/workspace';
 import {
@@ -12,21 +16,19 @@ import {
   useRef,
   useState,
 } from 'react';
-import { type LoaderFunction, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
-import { AppFallback } from '../../components/affine/app-container';
-import { useNavigateHelper } from '../../components/hooks/use-navigate-helper';
-import { WorkspaceNavigator } from '../../components/workspace-selector';
-import { AuthService } from '../../modules/cloud';
-import {
-  buildShowcaseWorkspace,
-  createFirstAppData,
-} from '../../utils/first-app-data';
+import { AppFallback } from '../../../components/affine/app-container';
+import { useNavigateHelper } from '../../../components/hooks/use-navigate-helper';
+import { WorkspaceNavigator } from '../../../components/workspace-selector';
+import { AuthService } from '../../../modules/cloud';
 
-export const loader: LoaderFunction = async () => {
-  return null;
-};
-
+/**
+ * index page
+ *
+ * query string:
+ * - initCloud: boolean, if true, when user is logged in, create a cloud workspace
+ */
 export const Component = ({
   defaultIndexRoute = 'all',
 }: {

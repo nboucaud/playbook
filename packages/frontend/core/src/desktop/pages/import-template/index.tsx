@@ -3,9 +3,14 @@ import { useService } from '@toeverything/infra';
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { useNavigateHelper } from '../../components/hooks/use-navigate-helper';
-import { ImportTemplateDialogService } from '../../modules/import-template';
+import { useNavigateHelper } from '../../../components/hooks/use-navigate-helper';
+import { ImportTemplateDialogService } from '../../../modules/import-template';
 
+/**
+ * /template/import page, only for web
+ *
+ * no ui for this route, just open the dialog
+ */
 export const Component = () => {
   const importTemplateDialogService = useService(ImportTemplateDialogService);
   const [searchParams] = useSearchParams();
