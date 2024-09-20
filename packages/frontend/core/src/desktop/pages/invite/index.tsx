@@ -6,18 +6,21 @@ import {
   getInviteInfoQuery,
 } from '@affine/graphql';
 import { useLiveData, useService } from '@toeverything/infra';
-import { useSetAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 import type { LoaderFunction } from 'react-router-dom';
 import { redirect, useLoaderData } from 'react-router-dom';
 
-import { authAtom } from '../../components/atoms';
 import {
   RouteLogic,
   useNavigateHelper,
-} from '../../components/hooks/use-navigate-helper';
-import { AuthService } from '../../modules/cloud';
+} from '../../../components/hooks/use-navigate-helper';
+import { AuthService } from '../../../modules/cloud';
 
+/**
+ * /invite/:inviteId page
+ *
+ * only for web
+ */
 export const loader: LoaderFunction = async args => {
   const inviteId = args.params.inviteId || '';
   const res = await fetcher({
@@ -60,7 +63,6 @@ export const Component = () => {
   const { jumpToSignIn } = useNavigateHelper();
   const { jumpToPage } = useNavigateHelper();
 
-  const setAuthAtom = useSetAtom(authAtom);
   const { inviteInfo } = useLoaderData() as {
     inviteId: string;
     inviteInfo: GetInviteInfoQuery['getInviteInfo'];
@@ -84,7 +86,6 @@ export const Component = () => {
     jumpToSignIn,
     loginStatus,
     openWorkspace,
-    setAuthAtom,
   ]);
 
   if (loginStatus === 'authenticated') {

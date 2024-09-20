@@ -1,7 +1,7 @@
 import { Scrollable } from '@affine/component';
+import { ThemeEditorService } from '@affine/core/modules/theme-editor';
 import { useLiveData, useService } from '@toeverything/infra';
 
-import { ThemeEditorService } from '../../services/theme-editor';
 import type { TreeNode } from '../resource';
 import * as styles from '../theme-editor.css';
 import { isColor } from '../utils';

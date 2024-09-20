@@ -15,6 +15,11 @@ const trustedDomain = [
 
 const logger = new DebugLogger('redirect_proxy');
 
+/**
+ * /redirect-proxy page
+ *
+ * only for web
+ */
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const searchParams = url.searchParams;

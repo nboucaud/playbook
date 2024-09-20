@@ -1,11 +1,11 @@
 import { Outlet } from 'react-router-dom';
 
-import { AllWorkspaceModals } from '../../components/providers/modal-provider';
+import { AllDialogs } from '../dialogs';
 
 export const RootWrapper = () => {
   return (
     <>
-      <AllWorkspaceModals />
+      <AllDialogs />
       <Outlet />
     </>
   );

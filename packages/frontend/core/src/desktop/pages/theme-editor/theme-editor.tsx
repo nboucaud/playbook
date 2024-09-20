@@ -1,8 +1,8 @@
 import { RadioGroup, Scrollable } from '@affine/component';
+import { ThemeEditorService } from '@affine/core/modules/theme-editor';
 import { useService } from '@toeverything/infra';
 import { useCallback, useEffect, useState } from 'react';
 
-import { ThemeEditorService } from '../services/theme-editor';
 import { ThemeEmpty } from './components/empty';
 import { ThemeTreeNode } from './components/tree-node';
 import { VariableList } from './components/variable-list';

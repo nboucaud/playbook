@@ -3,6 +3,13 @@ import { useAsyncCallback } from '@affine/core/components/hooks/affine-async-hoo
 import { useNavigateHelper } from '@affine/core/components/hooks/use-navigate-helper';
 import { useWorkspaceName } from '@affine/core/components/hooks/use-workspace-info';
 import { WorkspaceSelector } from '@affine/core/components/workspace-selector';
+import { AuthService } from '@affine/core/modules/cloud';
+import type { CreateWorkspaceCallbackPayload } from '@affine/core/modules/create-workspace';
+import {
+  ImportTemplateDialogService,
+  ImportTemplateService,
+  TemplateDownloaderService,
+} from '@affine/core/modules/import-template';
 import { WorkspaceFlavour } from '@affine/env/workspace';
 import { useI18n } from '@affine/i18n';
 import type { DocMode } from '@blocksuite/blocks';
@@ -16,11 +23,6 @@ import {
 import { cssVar } from '@toeverything/theme';
 import { useCallback, useEffect, useState } from 'react';
 
-import { AuthService } from '../../cloud';
-import type { CreateWorkspaceCallbackPayload } from '../../create-workspace';
-import { ImportTemplateDialogService } from '../services/dialog';
-import { TemplateDownloaderService } from '../services/downloader';
-import { ImportTemplateService } from '../services/import';
 import * as styles from './dialog.css';
 
 const Dialog = ({
@@ -224,7 +226,7 @@ const Dialog = ({
   );
 };
 
-export const ImportTemplateDialogProvider = () => {
+export const ImportTemplateDialog = () => {
   const importTemplateDialogService = useService(ImportTemplateDialogService);
   const isOpen = useLiveData(importTemplateDialogService.dialog.isOpen$);
   const template = useLiveData(importTemplateDialogService.dialog.template$);

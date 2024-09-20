@@ -3,6 +3,9 @@ import type { ConfirmModalProps } from '@affine/component/ui/modal';
 import { CloudSvg } from '@affine/core/components/affine/share-page-modal/cloud-svg';
 import { authAtom } from '@affine/core/components/atoms';
 import { useAsyncCallback } from '@affine/core/components/hooks/affine-async-hooks';
+import { AuthService } from '@affine/core/modules/cloud';
+import { CreateWorkspaceDialogService } from '@affine/core/modules/create-workspace';
+import { _addLocalWorkspace } from '@affine/core/modules/workspace-engine';
 import { DebugLogger } from '@affine/debug';
 import { apis } from '@affine/electron-api';
 import { WorkspaceFlavour } from '@affine/env/workspace';
@@ -18,10 +21,7 @@ import { useSetAtom } from 'jotai';
 import type { KeyboardEvent } from 'react';
 import { useCallback, useLayoutEffect, useState } from 'react';
 
-import { AuthService } from '../../../modules/cloud';
-import { _addLocalWorkspace } from '../../../modules/workspace-engine';
 import { buildShowcaseWorkspace } from '../../../utils/first-app-data';
-import { CreateWorkspaceDialogService } from '../services/dialog';
 import * as styles from './dialog.css';
 
 const logger = new DebugLogger('CreateWorkspaceModal');
@@ -160,7 +160,7 @@ const NameWorkspaceContent = ({
   );
 };
 
-const CreateWorkspaceDialog = () => {
+const CreateWorkspaceDialogInner = () => {
   const createWorkspaceDialogService = useService(CreateWorkspaceDialogService);
   const mode = useLiveData(createWorkspaceDialogService.dialog.mode$);
   const t = useI18n();
@@ -251,9 +251,9 @@ const CreateWorkspaceDialog = () => {
   }
 };
 
-export const CreateWorkspaceDialogProvider = () => {
+export const CreateWorkspaceDialog = () => {
   const createWorkspaceDialogService = useService(CreateWorkspaceDialogService);
   const isOpen = useLiveData(createWorkspaceDialogService.dialog.isOpen$);
 
-  return isOpen ? <CreateWorkspaceDialog /> : null;
+  return isOpen ? <CreateWorkspaceDialogInner /> : null;
 };
