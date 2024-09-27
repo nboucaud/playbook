@@ -413,6 +413,18 @@ jobs:
             script: |
               yarn workspace @affine/electron build:dev
               xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn workspace @affine-test/affine-desktop-cloud e2e
+          - name: 'Server Copilot E2E Test'
+            script: yarn workspace @affine-test/affine-cloud e2e --forbid-only --shard=1/3
+            openaiKey: COPILOT_OPENAI_API_KEY
+            falKey: COPILOT_FAL_API_KEY
+          - name: 'Server Copilot E2E Test'
+            script: yarn workspace @affine-test/affine-cloud e2e --forbid-only --shard=2/3
+            openaiKey: COPILOT_OPENAI_API_KEY
+            falKey: COPILOT_FAL_API_KEY
+          - name: 'Server Copilot E2E Test'
+            script: yarn workspace @affine-test/affine-cloud e2e --forbid-only --shard=3/3
+            openaiKey: COPILOT_OPENAI_API_KEY
+            falKey: COPILOT_FAL_API_KEY
     needs:
       - build-server-native
       - build-native
@@ -473,8 +485,8 @@ jobs:
           ${{ matrix.tests.script }}
         env:
           DEV_SERVER_URL: http://localhost:8080
-          COPILOT_OPENAI_API_KEY: 1
-          COPILOT_FAL_API_KEY: 1
+          COPILOT_OPENAI_API_KEY: ${{ secrets[matrix.tests.openaiKey] || 1 }}
+          COPILOT_FAL_API_KEY: ${{ secrets[matrix.tests.falKey] || 1 }}
 
       - name: Upload test results
         if: ${{ failure() }}
