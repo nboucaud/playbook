@@ -27,7 +27,7 @@ app.commandLine.appendSwitch('disable-features', 'PlzDedicatedWorker');
 
 // use the same data for internal & beta for testing
 if (overrideSession) {
-  const appName = buildType === 'stable' ? 'AFFiNE' : `AFFiNE-${buildType}`;
+  const appName = buildType === 'stable' ? 'Infogito' : `Infogito-${buildType}`;
   const userDataPath = path.join(app.getPath('appData'), appName);
   app.setPath('userData', userDataPath);
   app.setPath('sessionData', userDataPath);

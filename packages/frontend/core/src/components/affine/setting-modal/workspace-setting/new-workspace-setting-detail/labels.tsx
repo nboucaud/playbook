@@ -48,11 +48,11 @@ export const LabelsPanel = () => {
         background: 'var(--affine-tag-orange)',
       },
       syncCloud: {
-        value: 'Sync with AFFiNE Cloud',
+        value: 'Sync with Infogito Cloud',
         background: 'var(--affine-tag-blue)',
       },
       syncDocker: {
-        value: 'Sync with AFFiNE Docker',
+        value: 'Sync with Infogito Docker',
         background: 'var(--affine-tag-green)',
       },
       selfHosted: {

@@ -14,7 +14,7 @@ const url = app.get(URLHelper);
 
 const logger = new Logger('App');
 
-logger.log(`AFFiNE Server is running in [${AFFiNE.type}] mode`);
+logger.log(`Infogito Server is running in [${AFFiNE.type}] mode`);
 if (AFFiNE.node.dev) {
   logger.log('Startup Configuration:');
   logger.log(omit(globalThis.AFFiNE, 'ENV_MAP'));

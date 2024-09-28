@@ -23,7 +23,7 @@ export const ThemeEditorSetting = () => {
   return (
     <SettingRow
       name="Customize Theme"
-      desc="Edit all AFFiNE theme variables here"
+      desc="Edit all Infogito theme variables here"
     >
       <div style={{ display: 'flex', gap: 16 }}>
         {modified ? (

@@ -550,11 +550,11 @@ const InvoiceLine = ({
 
   const planText =
     invoice.plan === SubscriptionPlan.AI
-      ? 'AFFiNE AI'
+      ? 'Infogito AI'
       : invoice.plan === SubscriptionPlan.Pro
         ? invoice.recurring === SubscriptionRecurring.Lifetime
-          ? 'AFFiNE Cloud Believer'
-          : 'AFFiNE Cloud'
+          ? 'Infogito Cloud Believer'
+          : 'Infogito Cloud'
         : null;
 
   return (

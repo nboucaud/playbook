@@ -108,7 +108,7 @@ export class MailService {
 
   async sendSignUpMail(url: string, options: Options) {
     const html = emailTemplate({
-      title: 'Create AFFiNE Account',
+      title: 'Create Infogito Account',
       content:
         'Click the button below to complete your account creation and sign in. This magic link will expire in 30 minutes.',
       buttonContent: ' Create account and sign in',
@@ -117,29 +117,29 @@ export class MailService {
 
     return this.sendMail({
       html,
-      subject: 'Your AFFiNE account is waiting for you!',
+      subject: 'Your Infogito account is waiting for you!',
       ...options,
     });
   }
 
   async sendSignInMail(url: string, options: Options) {
     const html = emailTemplate({
-      title: 'Sign in to AFFiNE',
+      title: 'Sign in to Infogito',
       content:
         'Click the button below to securely sign in. The magic link will expire in 30 minutes.',
-      buttonContent: 'Sign in to AFFiNE',
+      buttonContent: 'Sign in to Infogito',
       buttonUrl: url,
     });
     return this.sendMail({
       html,
-      subject: 'Sign in to AFFiNE',
+      subject: 'Sign in to Infogito',
       ...options,
     });
   }
 
   async sendChangePasswordEmail(to: string, url: string) {
     const html = emailTemplate({
-      title: 'Modify your AFFiNE password',
+      title: 'Modify your Infogito password',
       content:
         'Click the button below to reset your password. The magic link will expire in 30 minutes.',
       buttonContent: 'Set new password',
@@ -147,14 +147,14 @@ export class MailService {
     });
     return this.sendMail({
       to,
-      subject: `Modify your AFFiNE password`,
+      subject: `Modify your Infogito password`,
       html,
     });
   }
 
   async sendSetPasswordEmail(to: string, url: string) {
     const html = emailTemplate({
-      title: 'Set your AFFiNE password',
+      title: 'Set your Infogito password',
       content:
         'Click the button below to set your password. The magic link will expire in 30 minutes.',
       buttonContent: 'Set your password',
@@ -162,21 +162,21 @@ export class MailService {
     });
     return this.sendMail({
       to,
-      subject: `Set your AFFiNE password`,
+      subject: `Set your Infogito password`,
       html,
     });
   }
   async sendChangeEmail(to: string, url: string) {
     const html = emailTemplate({
-      title: 'Verify your current email for AFFiNE',
+      title: 'Verify your current email for Infogito',
       content:
-        'You recently requested to change the email address associated with your AFFiNE account. To complete this process, please click on the verification link below. This magic link will expire in 30 minutes.',
+        'You recently requested to change the email address associated with your Infogito account. To complete this process, please click on the verification link below. This magic link will expire in 30 minutes.',
       buttonContent: 'Verify and set up a new email address',
       buttonUrl: url,
     });
     return this.sendMail({
       to,
-      subject: `Verify your current email for AFFiNE`,
+      subject: `Verify your current email for Infogito`,
       html,
     });
   }
@@ -184,13 +184,13 @@ export class MailService {
     const html = emailTemplate({
       title: 'Verify your new email address',
       content:
-        'You recently requested to change the email address associated with your AFFiNE account. To complete this process, please click on the verification link below. This magic link will expire in 30 minutes.',
+        'You recently requested to change the email address associated with your Infogito account. To complete this process, please click on the verification link below. This magic link will expire in 30 minutes.',
       buttonContent: 'Verify your new email address',
       buttonUrl: url,
     });
     return this.sendMail({
       to,
-      subject: `Verify your new email for AFFiNE`,
+      subject: `Verify your new email for Infogito`,
       html,
     });
   }
@@ -198,13 +198,13 @@ export class MailService {
     const html = emailTemplate({
       title: 'Verify your email address',
       content:
-        'You recently requested to verify the email address associated with your AFFiNE account. To complete this process, please click on the verification link below. This magic link will expire in 30 minutes.',
+        'You recently requested to verify the email address associated with your Infogito account. To complete this process, please click on the verification link below. This magic link will expire in 30 minutes.',
       buttonContent: 'Verify your email address',
       buttonUrl: url,
     });
     return this.sendMail({
       to,
-      subject: `Verify your email for AFFiNE`,
+      subject: `Verify your email for Infogito`,
       html,
     });
   }

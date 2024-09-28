@@ -177,7 +177,7 @@ export async function loadDBFile(): Promise<LoadDBFileResult> {
             extensions: ['db', 'affine'],
           },
         ],
-        message: 'Load Workspace from a AFFiNE file',
+        message: 'Load Workspace from a Infogito file',
       }));
     const originalPath = ret.filePaths?.[0];
     if (ret.canceled || !originalPath) {
