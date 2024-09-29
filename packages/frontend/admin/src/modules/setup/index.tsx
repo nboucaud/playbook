@@ -2,7 +2,8 @@ import { Navigate } from 'react-router-dom';
 
 import { useServerConfig } from '../common';
 import { Form } from './form';
-import logo from './logo.svg';
+// import logo from './logo.svg';
+import logo from './logo.png';
 
 export function Setup() {
   const config = useServerConfig();

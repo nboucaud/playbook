@@ -8,7 +8,7 @@ import { Navigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { isAdmin, useCurrentUser, useRevalidateCurrentUser } from '../common';
-import logo from './logo.svg';
+import logo from './logo.png';
 
 export function Auth() {
   const currentUser = useCurrentUser();
