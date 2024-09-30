@@ -95,7 +95,7 @@ export function setupSlashMenuAIEntry(slashMenu: AffineSlashMenuWidget) {
   });
 
   const AIMenuItems: AffineSlashMenuItem[] = [
-    { groupName: 'AFFiNE AI' },
+    { groupName: 'Infogito AI' },
     ...AIItems.filter(({ name }) =>
       ['Fix spelling', 'Fix grammar'].includes(name)
     ).map(item => ({

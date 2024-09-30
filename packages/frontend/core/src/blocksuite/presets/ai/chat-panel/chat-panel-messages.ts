@@ -258,7 +258,7 @@ export class ChatPanelMessages extends WithDisposable(ShadowlessElement) {
               )}
               <div>
                 ${this.isLoading
-                  ? 'AFFiNE AI is loading history...'
+                  ? 'Infogito AI is loading history...'
                   : 'What can I help you with?'}
               </div>
               ${this._renderAIOnboarding()}

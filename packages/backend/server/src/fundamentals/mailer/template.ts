@@ -29,7 +29,7 @@ export const emailTemplate = ({
             <a href="https://affine.pro" target="_blank">
               <img
                 src="https://cdn.affine.pro/mail/2023-8-9/affine-logo.png"
-                alt="AFFiNE log"
+                alt="Infogito log"
                 height="32px"
               />
             </a>
@@ -134,7 +134,7 @@ export const emailTemplate = ({
                     target="_blank"
                     ><img
                       src="https://cdn.affine.pro/mail/2023-8-9/Github.png"
-                      alt="AFFiNE github link"
+                      alt="Infogito github link"
                       height="16px"
                   /></a>
                 </td>
@@ -142,7 +142,7 @@ export const emailTemplate = ({
                   <a href="https://twitter.com/AffineOfficial" target="_blank">
                     <img
                       src="https://cdn.affine.pro/mail/2023-8-9/Twitter.png"
-                      alt="AFFiNE twitter link"
+                      alt="Infogito twitter link"
                       height="16px"
                     />
                   </a>
@@ -151,7 +151,7 @@ export const emailTemplate = ({
                   <a href="https://discord.gg/whd5mjYqVw" target="_blank"
                     ><img
                       src="https://cdn.affine.pro/mail/2023-8-9/Discord.png"
-                      alt="AFFiNE discord link"
+                      alt="Infogito discord link"
                       height="16px"
                   /></a>
                 </td>
@@ -159,7 +159,7 @@ export const emailTemplate = ({
                   <a href="https://www.youtube.com/@affinepro" target="_blank"
                     ><img
                       src="https://cdn.affine.pro/mail/2023-8-9/Youtube.png"
-                      alt="AFFiNE youtube link"
+                      alt="Infogito youtube link"
                       height="16px"
                   /></a>
                 </td>
@@ -167,7 +167,7 @@ export const emailTemplate = ({
                   <a href="https://t.me/affineworkos" target="_blank"
                     ><img
                       src="https://cdn.affine.pro/mail/2023-8-9/Telegram.png"
-                      alt="AFFiNE telegram link"
+                      alt="Infogito telegram link"
                       height="16px"
                   /></a>
                 </td>
@@ -175,7 +175,7 @@ export const emailTemplate = ({
                   <a href="https://www.reddit.com/r/Affine/" target="_blank"
                     ><img
                       src="https://cdn.affine.pro/mail/2023-8-9/Reddit.png"
-                      alt="AFFiNE reddit link"
+                      alt="Infogito reddit link"
                       height="16px"
                   /></a>
                 </td>

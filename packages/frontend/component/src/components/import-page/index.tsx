@@ -46,7 +46,8 @@ export const ImportPage = ({
     <div className={importPageBodyStyle}>
       <div className="title">Import</div>
       <span>
-        AFFiNE will gradually support more and more file types for import.&nbsp;
+        Infogito will gradually support more and more file types for
+        import.&nbsp;
         <a
           href="https://community.affine.pro/c/feature-requests/import-export"
           target="_blank"
@@ -72,7 +73,7 @@ export const ImportPage = ({
         title="Notion"
         right={
           <Tooltip
-            content={'Learn how to Import your Notion pages into AFFiNE.'}
+            content={'Learn how to Import your Notion pages into Infogito.'}
           >
             <HelpIcon width={20} height={20} />
           </Tooltip>
