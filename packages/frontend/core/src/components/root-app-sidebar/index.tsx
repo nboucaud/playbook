@@ -46,7 +46,6 @@ import {
 } from './index.css';
 import { AppSidebarJournalButton } from './journal-button';
 import { TrashButton } from './trash-button';
-import { UserInfo } from './user-info';
 
 export type RootAppSidebarProps = {
   isPublicWorkspace: boolean;
@@ -140,7 +139,7 @@ export const RootAppSidebar = (): ReactElement => {
               showSyncStatus
             />
           </div> */}
-          <UserInfo />
+          {/* <UserInfo /> */}
         </div>
         <div className={quickSearchAndNewPage}>
           <QuickSearchInput
