@@ -1,13 +1,6 @@
-import { BrowserWarning, LocalDemoTips } from '@affine/component/affine-banner';
-import { WorkspaceFlavour } from '@affine/env/workspace';
+import { BrowserWarning } from '@affine/component/affine-banner';
 import { Trans, useI18n } from '@affine/i18n';
-import { useLiveData, useService, type Workspace } from '@toeverything/infra';
-import { useSetAtom } from 'jotai';
-import { useCallback, useState } from 'react';
-
-import { useEnableCloud } from '../components/hooks/affine/use-enable-cloud';
-import { AuthService } from '../modules/cloud';
-import { authAtom } from './atoms';
+import { useState } from 'react';
 
 const minimumChromeVersion = 106;
 
@@ -55,43 +48,8 @@ const OSWarningMessage = () => {
   return null;
 };
 
-export const TopTip = ({
-  pageId,
-  workspace,
-}: {
-  pageId?: string;
-  workspace: Workspace;
-}) => {
-  const loginStatus = useLiveData(useService(AuthService).session.status$);
-  const isLoggedIn = loginStatus === 'authenticated';
-
+export const TopTip = () => {
   const [showWarning, setShowWarning] = useState(shouldShowWarning);
-  const [showLocalDemoTips, setShowLocalDemoTips] = useState(true);
-  const confirmEnableCloud = useEnableCloud();
-
-  const setAuthModal = useSetAtom(authAtom);
-  const onLogin = useCallback(() => {
-    setAuthModal({ openModal: true, state: 'signIn' });
-  }, [setAuthModal]);
-
-  if (
-    !BUILD_CONFIG.isElectron &&
-    showLocalDemoTips &&
-    workspace.flavour === WorkspaceFlavour.LOCAL
-  ) {
-    return (
-      <LocalDemoTips
-        isLoggedIn={isLoggedIn}
-        onLogin={onLogin}
-        onEnableCloud={() =>
-          confirmEnableCloud(workspace, { openPageId: pageId })
-        }
-        onClose={() => {
-          setShowLocalDemoTips(false);
-        }}
-      />
-    );
-  }
 
   return (
     <BrowserWarning

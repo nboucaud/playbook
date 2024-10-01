@@ -18,7 +18,6 @@ import type { Doc } from '@blocksuite/affine/store';
 import {
   DocService,
   DocsService,
-  FeatureFlagService,
   useFramework,
   useLiveData,
   useService,
@@ -84,14 +83,12 @@ const usePatchSpecs = (shared: boolean, mode: DocMode) => {
     docsService,
     editorService,
     workspaceService,
-    featureFlagService,
   } = useServices({
     PeekViewService,
     DocService,
     DocsService,
     WorkspaceService,
     EditorService,
-    FeatureFlagService,
   });
   const framework = useFramework();
   const referenceRenderer: ReferenceReactRenderer = useMemo(() => {
@@ -119,11 +116,10 @@ const usePatchSpecs = (shared: boolean, mode: DocMode) => {
   }, [workspaceService]);
 
   const specs = useMemo(() => {
-    const enableAI = featureFlagService.flags.enable_ai.value;
     return mode === 'edgeless'
-      ? createEdgelessModeSpecs(framework, enableAI)
-      : createPageModeSpecs(framework, enableAI);
-  }, [featureFlagService, mode, framework]);
+      ? createEdgelessModeSpecs(framework, false)
+      : createPageModeSpecs(framework, false);
+  }, [mode, framework]);
 
   const confirmModal = useConfirmModal();
   const patchedSpecs = useMemo(() => {

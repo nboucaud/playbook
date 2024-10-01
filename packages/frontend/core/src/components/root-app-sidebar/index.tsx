@@ -2,7 +2,6 @@ import { openSettingModalAtom } from '@affine/core/components/atoms';
 import { useAsyncCallback } from '@affine/core/components/hooks/affine-async-hooks';
 import {
   AddPageButton,
-  AppDownloadButton,
   AppSidebar,
   CategoryDivider,
   MenuItem,
@@ -11,7 +10,6 @@ import {
   SidebarContainer,
   SidebarScrollableContainer,
 } from '@affine/core/modules/app-sidebar/views';
-import { ExternalMenuLinkItem } from '@affine/core/modules/app-sidebar/views/menu-item/external-menu-link-item';
 import {
   ExplorerCollections,
   ExplorerFavorites,
@@ -25,12 +23,7 @@ import { apis, events } from '@affine/electron-api';
 import { useI18n } from '@affine/i18n';
 import { track } from '@affine/track';
 import type { Doc } from '@blocksuite/affine/store';
-import {
-  AllDocsIcon,
-  GithubIcon,
-  JournalIcon,
-  SettingsIcon,
-} from '@blocksuite/icons/rc';
+import { AllDocsIcon, PenIcon, SettingsIcon } from '@blocksuite/icons/rc';
 import type { Workspace } from '@toeverything/infra';
 import {
   useLiveData,
@@ -42,18 +35,17 @@ import type { MouseEvent, ReactElement } from 'react';
 import { useCallback, useEffect } from 'react';
 
 import { WorkbenchService } from '../../modules/workbench';
+import Logo from '../affine/onboarding/assets/logo';
+import type { ActiveTab } from '../affine/setting-modal/types';
 import { usePageHelper } from '../blocksuite/block-suite-page-list/utils';
-import { WorkspaceNavigator } from '../workspace-selector';
 import ImportPage from './import-page';
 import {
   quickSearch,
   quickSearchAndNewPage,
   workspaceAndUserWrapper,
-  workspaceWrapper,
 } from './index.css';
 import { AppSidebarJournalButton } from './journal-button';
 import { TrashButton } from './trash-button';
-import { UpdaterButton } from './updater-button';
 import { UserInfo } from './user-info';
 
 export type RootAppSidebarProps = {
@@ -126,25 +118,28 @@ export const RootAppSidebar = (): ReactElement => {
 
   const setOpenSettingModalAtom = useSetAtom(openSettingModalAtom);
 
-  const onOpenSettingModal = useCallback(() => {
-    setOpenSettingModalAtom({
-      activeTab: 'appearance',
-      open: true,
-    });
-    track.$.navigationPanel.$.openSettings();
-  }, [setOpenSettingModalAtom]);
+  const onOpenSettingModal = useCallback(
+    (active?: ActiveTab) => {
+      setOpenSettingModalAtom({
+        activeTab: active ? active : 'appearance',
+        open: true,
+      });
+      track.$.navigationPanel.$.openSettings();
+    },
+    [setOpenSettingModalAtom]
+  );
 
   return (
     <AppSidebar>
       <SidebarContainer>
         <div className={workspaceAndUserWrapper}>
-          <div className={workspaceWrapper}>
+          {/* <div className={workspaceWrapper}>
             <WorkspaceNavigator
               showEnableCloudButton
               showSettingsButton
               showSyncStatus
             />
-          </div>
+          </div> */}
           <UserInfo />
         </div>
         <div className={quickSearchAndNewPage}>
@@ -167,10 +162,19 @@ export const RootAppSidebar = (): ReactElement => {
         <MenuItem
           data-testid="slider-bar-workspace-setting-button"
           icon={<SettingsIcon />}
-          onClick={onOpenSettingModal}
+          onClick={() => onOpenSettingModal()}
         >
           <span data-testid="settings-modal-trigger">
             {t['com.affine.settingSidebar.title']()}
+          </span>
+        </MenuItem>
+        <MenuItem
+          data-testid="slider-bar-workspace-setting-button"
+          icon={<PenIcon />}
+          onClick={() => onOpenSettingModal('editor')}
+        >
+          <span data-testid="settings-modal-trigger">
+            {t['com.affine.settings.editorSettings']()}
           </span>
         </MenuItem>
       </SidebarContainer>
@@ -184,20 +188,12 @@ export const RootAppSidebar = (): ReactElement => {
         <div style={{ padding: '0 8px' }}>
           <TrashButton />
           <ImportPage docCollection={docCollection} />
-          <ExternalMenuLinkItem
-            href="https://affine.pro/blog?tag=Release+Note"
-            icon={<JournalIcon />}
-            label={t['com.affine.app-sidebar.learn-more']()}
-          />
-          <ExternalMenuLinkItem
-            href="https://github.com/toeverything/affine"
-            icon={<GithubIcon />}
-            label={t['com.affine.app-sidebar.star-us']()}
-          />
         </div>
       </SidebarScrollableContainer>
       <SidebarContainer>
-        {BUILD_CONFIG.isElectron ? <UpdaterButton /> : <AppDownloadButton />}
+        <div style={{ width: 'fit-content' }}>
+          <Logo />
+        </div>
       </SidebarContainer>
     </AppSidebar>
   );

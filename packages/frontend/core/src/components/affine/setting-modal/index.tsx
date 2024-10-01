@@ -2,13 +2,7 @@ import { Loading, Scrollable } from '@affine/component';
 import { WorkspaceDetailSkeleton } from '@affine/component/setting-components';
 import type { ModalProps } from '@affine/component/ui/modal';
 import { Modal } from '@affine/component/ui/modal';
-import {
-  openIssueFeedbackModalAtom,
-  openStarAFFiNEModalAtom,
-} from '@affine/core/components/atoms';
 import { AuthService } from '@affine/core/modules/cloud';
-import { Trans } from '@affine/i18n';
-import { ContactWithUsIcon } from '@blocksuite/icons/rc';
 import {
   useLiveData,
   useService,
@@ -121,24 +115,10 @@ const SettingModalInner = ({
     },
     [onSettingClick]
   );
-  const setOpenIssueFeedbackModal = useSetAtom(openIssueFeedbackModalAtom);
-  const setOpenStarAFFiNEModal = useSetAtom(openStarAFFiNEModalAtom);
-
-  const handleOpenIssueFeedbackModal = useCallback(() => {
-    setOpenIssueFeedbackModal(true);
-  }, [setOpenIssueFeedbackModal]);
-
-  const handleOpenStarAFFiNEModal = useCallback(() => {
-    setOpenStarAFFiNEModal(true);
-  }, [setOpenStarAFFiNEModal]);
 
   return (
     <>
-      <SettingSidebar
-        activeTab={activeTab}
-        onTabChange={onTabChange}
-        selectedWorkspaceId={workspaceMetadata?.id ?? null}
-      />
+      <SettingSidebar activeTab={activeTab} onTabChange={onTabChange} />
       <Scrollable.Root>
         <Scrollable.Viewport
           data-testid="setting-modal-content"
@@ -162,26 +142,6 @@ const SettingModalInner = ({
                   <AccountSetting />
                 ) : null}
               </Suspense>
-            </div>
-            <div className={style.footer}>
-              <ContactWithUsIcon fontSize={16} />
-              <Trans
-                i18nKey={'com.affine.settings.suggestion-2'}
-                components={{
-                  1: (
-                    <span
-                      className={style.link}
-                      onClick={handleOpenStarAFFiNEModal}
-                    />
-                  ),
-                  2: (
-                    <span
-                      className={style.link}
-                      onClick={handleOpenIssueFeedbackModal}
-                    />
-                  ),
-                }}
-              />
             </div>
           </div>
           <Scrollable.Scrollbar />

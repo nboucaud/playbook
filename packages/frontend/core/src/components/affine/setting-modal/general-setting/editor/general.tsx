@@ -9,7 +9,6 @@ import {
   RowInput,
   Scrollable,
   Switch,
-  useConfirmModal,
 } from '@affine/component';
 import {
   SettingRow,
@@ -27,11 +26,7 @@ import {
 import { useI18n } from '@affine/i18n';
 import type { DocMode } from '@blocksuite/affine/blocks';
 import { DoneIcon, SearchIcon } from '@blocksuite/icons/rc';
-import {
-  FeatureFlagService,
-  useLiveData,
-  useServices,
-} from '@toeverything/infra';
+import { useLiveData, useServices } from '@toeverything/infra';
 import clsx from 'clsx';
 import {
   forwardRef,
@@ -399,63 +394,11 @@ export const SpellCheckSettings = () => {
   );
 };
 
-const AISettings = () => {
-  const t = useI18n();
-  const { openConfirmModal } = useConfirmModal();
-  const { featureFlagService } = useServices({ FeatureFlagService });
-
-  const enableAI = useLiveData(featureFlagService.flags.enable_ai.$);
-
-  const onAIChange = useCallback(
-    (checked: boolean) => {
-      featureFlagService.flags.enable_ai.set(checked); // this will trigger page reload, see `FeatureFlagService`
-    },
-    [featureFlagService]
-  );
-  const onToggleAI = useCallback(
-    (checked: boolean) => {
-      openConfirmModal({
-        title: checked
-          ? t['com.affine.settings.editorSettings.general.ai.enable.title']()
-          : t['com.affine.settings.editorSettings.general.ai.disable.title'](),
-        description: checked
-          ? t[
-              'com.affine.settings.editorSettings.general.ai.enable.description'
-            ]()
-          : t[
-              'com.affine.settings.editorSettings.general.ai.disable.description'
-            ](),
-        confirmText: checked
-          ? t['com.affine.settings.editorSettings.general.ai.enable.confirm']()
-          : t[
-              'com.affine.settings.editorSettings.general.ai.disable.confirm'
-            ](),
-        cancelText: t['Cancel'](),
-        onConfirm: () => onAIChange(checked),
-        confirmButtonOptions: {
-          variant: checked ? 'primary' : 'error',
-        },
-      });
-    },
-    [openConfirmModal, t, onAIChange]
-  );
-
-  return (
-    <SettingRow
-      name={t['com.affine.settings.editorSettings.general.ai.title']()}
-      desc={t['com.affine.settings.editorSettings.general.ai.description']()}
-    >
-      <Switch checked={enableAI} onChange={onToggleAI} />
-    </SettingRow>
-  );
-};
-
 export const General = () => {
   const t = useI18n();
 
   return (
     <SettingWrapper title={t['com.affine.settings.editorSettings.general']()}>
-      <AISettings />
       <FontFamilySettings />
       <CustomFontFamilySettings />
       <NewDocDefaultModeSettings />

@@ -6,7 +6,7 @@ import {
 } from '@blocksuite/affine/blocks';
 import { type FrameworkProvider } from '@toeverything/infra';
 
-import { AIBlockSpecs, DefaultBlockSpecs } from './common';
+import { DefaultBlockSpecs } from './common';
 import { createPageRootBlockSpec } from './custom/root-block';
 
 export function createPageModeSpecs(
@@ -14,7 +14,7 @@ export function createPageModeSpecs(
   enableAI: boolean
 ): ExtensionType[] {
   return [
-    ...(enableAI ? AIBlockSpecs : DefaultBlockSpecs),
+    ...DefaultBlockSpecs,
     PageSurfaceBlockSpec,
     PageSurfaceRefBlockSpec,
     NoteBlockSpec,
