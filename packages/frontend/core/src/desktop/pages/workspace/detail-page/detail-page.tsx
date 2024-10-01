@@ -13,7 +13,7 @@ import { useI18n } from '@affine/i18n';
 import { RefNodeSlotsProvider } from '@blocksuite/affine/blocks';
 import { DisposableGroup } from '@blocksuite/affine/global/utils';
 import { type AffineEditorContainer } from '@blocksuite/affine/presets';
-import { AiIcon, FrameIcon, TocIcon, TodayIcon } from '@blocksuite/icons/rc';
+import { FrameIcon, TocIcon, TodayIcon } from '@blocksuite/icons/rc';
 import {
   DocService,
   FeatureFlagService,
@@ -48,7 +48,6 @@ import { PageNotFound } from '../../404';
 import * as styles from './detail-page.css';
 import { DetailPageHeader } from './detail-page-header';
 import { DetailPageWrapper } from './detail-page-wrapper';
-import { EditorChatPanel } from './tabs/chat';
 import { EditorFramePanel } from './tabs/frame';
 import { EditorJournalPanel } from './tabs/journal';
 import { EditorOutlinePanel } from './tabs/outline';
@@ -61,7 +60,6 @@ const DetailPageImpl = memo(function DetailPageImpl() {
     docService,
     workspaceService,
     globalContextService,
-    featureFlagService,
   } = useServices({
     WorkbenchService,
     ViewService,
@@ -246,7 +244,7 @@ const DetailPageImpl = memo(function DetailPageImpl() {
         >
           {/* Add a key to force rerender when page changed, to avoid error boundary persisting. */}
           <AffineErrorBoundary key={doc.id}>
-            <TopTip pageId={doc.id} workspace={workspace} />
+            <TopTip />
             <Scrollable.Root>
               <Scrollable.Viewport
                 ref={refCallback}
@@ -273,16 +271,6 @@ const DetailPageImpl = memo(function DetailPageImpl() {
           {isInTrash ? <TrashPageFooter /> : null}
         </div>
       </ViewBody>
-
-      {featureFlagService.flags.enable_ai.value && (
-        <ViewSidebarTab
-          tabId="chat"
-          icon={<AiIcon />}
-          unmountOnInactive={false}
-        >
-          <EditorChatPanel editor={editorContainer} ref={chatPanelRef} />
-        </ViewSidebarTab>
-      )}
 
       <ViewSidebarTab tabId="journal" icon={<TodayIcon />}>
         <EditorJournalPanel />

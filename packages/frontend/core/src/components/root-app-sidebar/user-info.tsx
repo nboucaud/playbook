@@ -9,7 +9,6 @@ import {
   Skeleton,
 } from '@affine/component';
 import {
-  authAtom,
   openSettingModalAtom,
   openSignOutModalAtom,
 } from '@affine/core/components/atoms';
@@ -59,19 +58,8 @@ const AuthorizedUserInfo = ({ account }: { account: AuthAccountInfo }) => {
 };
 
 const UnauthorizedUserInfo = () => {
-  const setOpen = useSetAtom(authAtom);
-
-  const openSignInModal = useCallback(() => {
-    setOpen(state => ({ ...state, openModal: true }));
-  }, [setOpen]);
-
   return (
-    <IconButton
-      onClick={openSignInModal}
-      data-testid="sidebar-user-avatar"
-      variant="plain"
-      size="24"
-    >
+    <IconButton data-testid="sidebar-user-avatar" variant="plain" size="24">
       <UnknownUserIcon />
     </IconButton>
   );

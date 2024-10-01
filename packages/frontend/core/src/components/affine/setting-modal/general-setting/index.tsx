@@ -1,12 +1,6 @@
 import { UserFeatureService } from '@affine/core/modules/cloud/services/user-feature';
 import { useI18n } from '@affine/i18n';
-import {
-  AppearanceIcon,
-  ExperimentIcon,
-  InformationIcon,
-  KeyboardIcon,
-  PenIcon,
-} from '@blocksuite/icons/rc';
+import { AppearanceIcon, KeyboardIcon, PenIcon } from '@blocksuite/icons/rc';
 import {
   FeatureFlagService,
   useLiveData,
@@ -15,15 +9,9 @@ import {
 import type { ReactElement, SVGProps } from 'react';
 import { useEffect } from 'react';
 
-import { AuthService, ServerConfigService } from '../../../../modules/cloud';
 import type { GeneralSettingKey } from '../types';
-import { AboutAffine } from './about';
 import { AppearanceSettings } from './appearance';
-import { BillingSettings } from './billing';
 import { EditorSettings } from './editor';
-import { ExperimentalFeatures } from './experimental-features';
-import { PaymentIcon, UpgradeIcon } from './icons';
-import { AFFiNEPricingPlans } from './plans';
 import { Shortcuts } from './shortcuts';
 
 interface GeneralSettingListItem {
@@ -37,21 +25,11 @@ export type GeneralSettingList = GeneralSettingListItem[];
 
 export const useGeneralSettingList = (): GeneralSettingList => {
   const t = useI18n();
-  const {
-    authService,
-    serverConfigService,
-    userFeatureService,
-    featureFlagService,
-  } = useServices({
-    AuthService,
-    ServerConfigService,
+  const { userFeatureService, featureFlagService } = useServices({
     UserFeatureService,
     FeatureFlagService,
   });
-  const status = useLiveData(authService.session.status$);
-  const hasPaymentFeature = useLiveData(
-    serverConfigService.serverConfig.features$.map(f => f?.payment)
-  );
+
   const enableEditorSettings = useLiveData(
     featureFlagService.flags.enable_editor_settings.$
   );
@@ -73,13 +51,8 @@ export const useGeneralSettingList = (): GeneralSettingList => {
       icon: KeyboardIcon,
       testId: 'shortcuts-panel-trigger',
     },
-    {
-      key: 'about',
-      title: t['com.affine.aboutAFFiNE.title'](),
-      icon: InformationIcon,
-      testId: 'about-panel-trigger',
-    },
   ];
+
   if (enableEditorSettings) {
     // add editor settings to second position
     settings.splice(1, 0, {
@@ -89,30 +62,6 @@ export const useGeneralSettingList = (): GeneralSettingList => {
       testId: 'editor-panel-trigger',
     });
   }
-
-  if (hasPaymentFeature) {
-    settings.splice(3, 0, {
-      key: 'plans',
-      title: t['com.affine.payment.title'](),
-      icon: UpgradeIcon,
-      testId: 'plans-panel-trigger',
-    });
-    if (status === 'authenticated') {
-      settings.splice(3, 0, {
-        key: 'billing',
-        title: t['com.affine.payment.billing-setting.title'](),
-        icon: PaymentIcon,
-        testId: 'billing-panel-trigger',
-      });
-    }
-  }
-
-  settings.push({
-    key: 'experimental-features',
-    title: t['com.affine.settings.workspace.experimental-features'](),
-    icon: ExperimentIcon,
-    testId: 'experimental-features-trigger',
-  });
 
   return settings;
 };
@@ -129,14 +78,6 @@ export const GeneralSetting = ({ generalKey }: GeneralSettingProps) => {
       return <EditorSettings />;
     case 'appearance':
       return <AppearanceSettings />;
-    case 'about':
-      return <AboutAffine />;
-    case 'plans':
-      return <AFFiNEPricingPlans />;
-    case 'billing':
-      return <BillingSettings />;
-    case 'experimental-features':
-      return <ExperimentalFeatures />;
     default:
       return null;
   }

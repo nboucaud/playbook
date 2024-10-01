@@ -12,7 +12,7 @@ import {
 } from '@blocksuite/affine/blocks';
 import type { FrameworkProvider } from '@toeverything/infra';
 
-import { AIBlockSpecs, DefaultBlockSpecs } from './common';
+import { DefaultBlockSpecs } from './common';
 import { createEdgelessRootBlockSpec } from './custom/root-block';
 
 export function createEdgelessModeSpecs(
@@ -20,7 +20,7 @@ export function createEdgelessModeSpecs(
   enableAI: boolean
 ): ExtensionType[] {
   return [
-    ...(enableAI ? AIBlockSpecs : DefaultBlockSpecs),
+    ...DefaultBlockSpecs,
     EdgelessSurfaceBlockSpec,
     EdgelessSurfaceRefBlockSpec,
     FrameBlockSpec,
